@@ -37,7 +37,7 @@ public class UICoolDown : MonoBehaviour
             {
                 isCoolingDown = false;
                 cooldownText.text = skillName;
-                cooldownImage.fillAmount = 0f;
+                cooldownImage.fillAmount = 1f;
             }
         }
     }

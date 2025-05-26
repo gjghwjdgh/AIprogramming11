@@ -407,6 +407,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3892002113635060324, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -423,17 +427,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3892002113635060323, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
   m_PrefabInstance: {fileID: 437812308}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &437812310 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3892002113134389376, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
-  m_PrefabInstance: {fileID: 437812308}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &437812311 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3892002113635060322, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
@@ -451,26 +444,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d4f3b9c15bac04880efdae24eab85d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldownImage: {fileID: 437812310}
+  cooldownImage: {fileID: 437812313}
   cooldownText: {fileID: 1708796264}
   cooldownDuration: 2.5
   skillName: Defend
---- !u!224 &454002883 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5784895257406628655, guid: 17cbc357bf20de74485f5f5d54b77b72, type: 3}
-  m_PrefabInstance: {fileID: 966565426}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &504275290 stripped
+--- !u!114 &437812313 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3892002113134389376, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
-  m_PrefabInstance: {fileID: 1782876541}
+  m_CorrespondingSourceObject: {fileID: 3892002113635060324, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
+  m_PrefabInstance: {fileID: 437812308}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 437812311}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &454002883 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5784895257406628655, guid: 17cbc357bf20de74485f5f5d54b77b72, type: 3}
+  m_PrefabInstance: {fileID: 966565426}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &528266010
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,10 +871,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d4f3b9c15bac04880efdae24eab85d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldownImage: {fileID: 504275290}
+  cooldownImage: {fileID: 715784086}
   cooldownText: {fileID: 432871638}
   cooldownDuration: 5
   skillName: Attack
+--- !u!114 &715784086 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3892002113635060324, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
+  m_PrefabInstance: {fileID: 1782876541}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715784081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &747623932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -982,6 +986,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3892002113635060324, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -998,17 +1006,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3892002113635060323, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
   m_PrefabInstance: {fileID: 747623932}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &747623934 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3892002113134389376, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
-  m_PrefabInstance: {fileID: 747623932}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &747623935 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3892002113635060322, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
@@ -1026,10 +1023,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d4f3b9c15bac04880efdae24eab85d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldownImage: {fileID: 747623934}
+  cooldownImage: {fileID: 747623937}
   cooldownText: {fileID: 528266012}
   cooldownDuration: 7
   skillName: Dodge
+--- !u!114 &747623937 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3892002113635060324, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
+  m_PrefabInstance: {fileID: 747623932}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 747623935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &901811677
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1491,10 +1499,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d4f3b9c15bac04880efdae24eab85d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldownImage: {fileID: 1684575450}
+  cooldownImage: {fileID: 1278909583}
   cooldownText: {fileID: 1801864878}
   cooldownDuration: 5
   skillName: Attack
+--- !u!114 &1278909583 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7226130141095844594, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
+  m_PrefabInstance: {fileID: 1942709809}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278909578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1586457628
 GameObject:
   m_ObjectHideFlags: 0
@@ -1752,17 +1771,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1638872086}
   m_CullTransparentMesh: 1
---- !u!114 &1684575450 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7226130139922463648, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
-  m_PrefabInstance: {fileID: 1942709809}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1708796262
 GameObject:
   m_ObjectHideFlags: 0
@@ -2076,6 +2084,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3892002113635060324, guid: 50b45ee32b55a7845a24f4d5c8194db1, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -2243,6 +2255,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Right Dodge CoolDown
       objectReference: {fileID: 0}
+    - target: {fileID: 7226130141095844594, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7226130141095844595, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -2339,17 +2355,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7226130141095844595, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
   m_PrefabInstance: {fileID: 1827371923}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1827371925 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7226130139922463648, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
-  m_PrefabInstance: {fileID: 1827371923}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1827371926 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7226130141095844492, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
@@ -2367,10 +2372,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d4f3b9c15bac04880efdae24eab85d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldownImage: {fileID: 1827371925}
+  cooldownImage: {fileID: 1827371928}
   cooldownText: {fileID: 1638872088}
   cooldownDuration: 7
   skillName: Dodge
+--- !u!114 &1827371928 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7226130141095844594, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
+  m_PrefabInstance: {fileID: 1827371923}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827371926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1942709809
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2390,6 +2406,10 @@ PrefabInstance:
     - target: {fileID: 7226130141095844492, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
       propertyPath: m_Name
       value: Right Attack CoolDown
+      objectReference: {fileID: 0}
+    - target: {fileID: 7226130141095844594, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7226130141095844595, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
       propertyPath: m_Pivot.x
@@ -2502,6 +2522,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Right Defend CoolDown
       objectReference: {fileID: 0}
+    - target: {fileID: 7226130141095844594, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7226130141095844595, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -2598,17 +2622,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7226130141095844595, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
   m_PrefabInstance: {fileID: 1966732074}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1966732076 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7226130139922463648, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
-  m_PrefabInstance: {fileID: 1966732074}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1966732077 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7226130141095844492, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
@@ -2626,10 +2639,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d4f3b9c15bac04880efdae24eab85d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldownImage: {fileID: 1966732076}
+  cooldownImage: {fileID: 1966732079}
   cooldownText: {fileID: 562907331}
   cooldownDuration: 2.5
   skillName: Defend
+--- !u!114 &1966732079 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7226130141095844594, guid: ef0e924a04b82674ca699e6ff30af008, type: 3}
+  m_PrefabInstance: {fileID: 1966732074}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966732077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
