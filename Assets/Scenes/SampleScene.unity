@@ -751,6 +751,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &892966869 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+  m_PrefabInstance: {fileID: 1672657360}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &892966870 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+  m_PrefabInstance: {fileID: 1672657360}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &892966872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892966869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75cec2d5672f84f42827d44e644e0ebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 2
 --- !u!1 &1133135366
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,6 +990,73 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1146624026}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+<<<<<<< Updated upstream
+=======
+--- !u!1001 &1672657360
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1835569927}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.17434508
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.14607376
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_Name
+      value: Paladin WProp J Nordstrom@Sword And Shield Idle
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b04b76e5f8a48ed42962498bdacbc516, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 892966872}
+  m_SourcePrefab: {fileID: 100100000, guid: 6872fbd9cbb2fe44d8b68039253c1483, type: 3}
+>>>>>>> Stashed changes
 --- !u!1 &1835569926
 GameObject:
   m_ObjectHideFlags: 0
@@ -1001,6 +1091,10 @@ Transform:
   - {fileID: 580625329}
   - {fileID: 1146624027}
   - {fileID: 1133135367}
+<<<<<<< Updated upstream
+=======
+  - {fileID: 892966870}
+>>>>>>> Stashed changes
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
