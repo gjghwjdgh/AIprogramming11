@@ -16,10 +16,14 @@ public class RootMotionMover : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
             v = 1.0f;
+        else if (Input.GetKey(KeyCode.S))
+            v = -1.0f;
+
         else
         {
             v = 0;
         }
+
 
         // 애니메이터에 v 값만 전달 → 애니메이션 전환만 담당
         animator.SetFloat("v", v);
