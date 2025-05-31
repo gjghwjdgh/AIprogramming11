@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class TestUIController : MonoBehaviour
 {
+    public static TestUIController Instance { get; private set; }
+
     public UICoolDown leftAttack;
     public UICoolDown leftDefend;
     public UICoolDown leftDodge;
@@ -17,6 +19,14 @@ public class TestUIController : MonoBehaviour
     private float leftHealth = 100f;
     private float rightHealth = 100f;
     private float maxHealth = 100f;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     void Update()
     {
@@ -40,5 +50,18 @@ public class TestUIController : MonoBehaviour
             rightHealth = Mathf.Max(0, rightHealth - 10f);
             rightHealthFill.fillAmount = rightHealth / maxHealth;
         }
+    }
+    // 체력 UI를 외부에서 갱신하는 함수 추가
+    public void SetLeftHealth(float current, float max)
+    {
+        leftHealth = current;
+        maxHealth = max;
+        leftHealthFill.fillAmount = leftHealth / maxHealth;
+    }
+    public void SetRightHealth(float current, float max)
+    {
+        rightHealth = current;
+        maxHealth = max;
+        rightHealthFill.fillAmount = rightHealth / maxHealth;
     }
 }
