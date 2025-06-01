@@ -20,7 +20,7 @@ public class TestUIController : MonoBehaviour
 
     void Update()
     {
-        // Å×½ºÆ®¿ë ÄðÅ¸ÀÓ ¹ßµ¿
+        // ï¿½×½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ßµï¿½
         if (Input.GetKeyDown(KeyCode.Alpha1)) leftAttack.TriggerCooldown();
         if (Input.GetKeyDown(KeyCode.Alpha2)) leftDefend.TriggerCooldown();
         if (Input.GetKeyDown(KeyCode.Alpha3)) leftDodge.TriggerCooldown();
@@ -28,14 +28,14 @@ public class TestUIController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha9)) rightDefend.TriggerCooldown();
         if (Input.GetKeyDown(KeyCode.Alpha0)) rightDodge.TriggerCooldown();
 
-        // Ã¼·Â Á¶Àý Å×½ºÆ®
-        if (Input.GetKeyDown(KeyCode.L))
+        // Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
+        if (Input.GetKeyDown(KeyCode.N))
         {
             leftHealth = Mathf.Max(0, leftHealth - 10f);
             leftHealthFill.fillAmount = leftHealth / maxHealth;
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             rightHealth = Mathf.Max(0, rightHealth - 10f);
             rightHealthFill.fillAmount = rightHealth / maxHealth;

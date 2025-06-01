@@ -1,13 +1,18 @@
 using UnityEngine;
+using System.Collections;
 
 public class RootMotionMover : MonoBehaviour
 {
     private Animator animator;
+    public TrailRenderer swordTrail; // ì¸ìŠ¤í™í„°ì—ì„œ ì—°ê²°
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        animator.applyRootMotion = true;  //  ¹İµå½Ã ÄÑ¾ß ÇÔ
+        animator.applyRootMotion = true;
+
+        if (swordTrail != null)
+            swordTrail.enabled = false;
     }
 
     void Update()
@@ -19,44 +24,49 @@ public class RootMotionMover : MonoBehaviour
         else if (Input.GetKey(KeyCode.S))
             v = -1.0f;
 
-        else
-        {
-            v = 0;
-        }
-
-
-        // ¾Ö´Ï¸ŞÀÌÅÍ¿¡ v °ª¸¸ Àü´Ş ¡æ ¾Ö´Ï¸ŞÀÌ¼Ç ÀüÈ¯¸¸ ´ã´ç
         animator.SetFloat("v", v);
 
-        // Q Å° ¡æ °ø°İ ¸ğ¼Ç 1 ÈÖµÎ¸£±â
         if (Input.GetKeyDown(KeyCode.Q))
         {
             animator.SetTrigger("attackTrigger");
             animator.SetInteger("attackIndex", 0);
-            
+            StartCoroutine(PlayTrail(1.0f, 0.3f)); // Q ê³µê²© ê¶¤ì 
         }
 
-        // E Å° ¡æ °ø°İ ¸ğ¼Ç 2 ¹ßÂ÷±â
         if (Input.GetKeyDown(KeyCode.E))
         {
             animator.SetTrigger("attackTrigger");
-            animator.SetInteger("attackIndex", 1);
-            
+            animator.SetInteger("attackIndex", 1); // ë°œì°¨ê¸° â€” ê²€ê¸° ì—†ìŒ
         }
 
-        // R Å° ¡æ °ø°İ ¸ğ¼Ç 3 È¸Àüº£±â
         if (Input.GetKeyDown(KeyCode.R))
         {
             animator.SetTrigger("attackTrigger");
             animator.SetInteger("attackIndex", 2);
-
+            StartCoroutine(PlayTrail(1.5f, 0.5f)); // R ê³µê²© ê¶¤ì 
         }
-
     }
+
+IEnumerator PlayTrail(float duration, float delay = 0f) // ì„ íƒì  delay íŒŒë¼ë¯¸í„° ì¶”ê°€
+{
+    if (swordTrail != null)
+    {
+        if (delay > 0)
+        {
+            yield return new WaitForSeconds(delay);
+        }
+        swordTrail.enabled = true;
+        swordTrail.Clear(); // í•„ìš”í•˜ë‹¤ë©´ ì´ì „ ê¶¤ì ì„ ì§€ì›ë‹ˆë‹¤.
+        yield return new WaitForSeconds(duration);
+        swordTrail.enabled = false;
+    }
+}
+
+// í˜¸ì¶œ ì˜ˆì‹œ (0.1ì´ˆ ë’¤ì— 0.4ì´ˆ ë™ì•ˆ ê¶¤ì  í™œì„±í™”)
+// StartCoroutine(PlayTrail(0.4f, 0.1f));
 
     void OnAnimatorMove()
     {
-        // AnimatorÀÇ Root Motion ÀÌµ¿ µ¥ÀÌÅÍ¸¦ Transform¿¡ ´©Àû Àû¿ë
         transform.position += animator.deltaPosition;
         transform.rotation *= animator.deltaRotation;
     }
