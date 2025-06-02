@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class TestUIController : MonoBehaviour
 {
+    public static TestUIController Instance { get; private set; } //KIM
+
     public UICoolDown leftAttack;
     public UICoolDown leftDefend;
     public UICoolDown leftDodge;
@@ -40,6 +42,14 @@ public class TestUIController : MonoBehaviour
             // 필요하다면 자동으로 찾아보는 로직 추가 가능
             // uiManager = FindObjectOfType<UIManager>();
         }
+    }
+
+    private void Awake() //KIM
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
     }
 
     void Update()
@@ -121,5 +131,19 @@ public class TestUIController : MonoBehaviour
         {
             rightHealthFill.fillAmount = rightHealth / maxHealth;
         }
+    }
+
+    // 체력 UI를 외부에서 갱신하는 함수 추가 KIM
+    public void SetLeftHealth(float current, float max)
+    {
+        leftHealth = current;
+        maxHealth = max;
+        leftHealthFill.fillAmount = leftHealth / maxHealth;
+    }
+    public void SetRightHealth(float current, float max)
+    {
+        rightHealth = current;
+        maxHealth = max;
+        rightHealthFill.fillAmount = rightHealth / maxHealth;
     }
 }
