@@ -56,8 +56,12 @@ public class RootMotionMover : MonoBehaviour
 
     void OnAnimatorMove()
     {
-        // Animator의 Root Motion 이동 데이터를 Transform에 누적 적용
-        transform.position += animator.deltaPosition;
+        // deltaPosition을 복사
+        Vector3 deltaPos = animator.deltaPosition;
+        deltaPos.y = 0.0f;  // 복사본의 Y를 0으로
+
+        // 이동 반영
+        transform.position += deltaPos;
         transform.rotation *= animator.deltaRotation;
     }
 }
