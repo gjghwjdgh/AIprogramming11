@@ -52,6 +52,19 @@ public class RootMotionMover : MonoBehaviour
 
         }
 
+        //Left Shift키 -> 방어 모션
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            
+            animator.SetBool("isDefending", true);
+        }
+        else
+        {
+            animator.SetBool("isDefending", false);
+        }
+
+
+
     }
 
     void OnAnimatorMove()
