@@ -1562,7 +1562,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 830107995}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5d24ec611a00fc4fa6b2cf6e650ab64, type: 3}
+  m_Script: {fileID: 11500000, guid: 031134a7d7d2d6a4087bffb67db8bbe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   side: 0
@@ -1755,7 +1755,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 972183446}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5d24ec611a00fc4fa6b2cf6e650ab64, type: 3}
+  m_Script: {fileID: 11500000, guid: 031134a7d7d2d6a4087bffb67db8bbe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   side: 1
@@ -2915,6 +2915,9 @@ MonoBehaviour:
   rightDodge: {fileID: 1559185491}
   leftHealthFill: {fileID: 1446269456}
   rightHealthFill: {fileID: 248156211}
+  uiManager: {fileID: 0}
+  leftPlayerName: Left Player
+  rightPlayerName: Right Player
 --- !u!4 &1680591688
 Transform:
   m_ObjectHideFlags: 0
