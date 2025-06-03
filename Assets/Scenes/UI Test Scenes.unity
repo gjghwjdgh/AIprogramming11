@@ -198,6 +198,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shieldCollider: {fileID: 83097763}
   isShieldActive: 0
+  myStatus: {fileID: 0}
+  myAnimator: {fileID: 0}
+  defendAnimationStateName: Defend
+  enemyWeaponTag: EnemyWeapon
+  isPlayerControlled: 1
 --- !u!1 &106905409 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1051571768989249988, guid: 542a721634608c743a26148a047c6c6e, type: 3}
@@ -304,6 +309,10 @@ PrefabInstance:
     - target: {fileID: 1051571768989249988, guid: 2a6f6f2ced5e0b24faf27dbd90950b90, type: 3}
       propertyPath: m_Name
       value: Paladin_J_Nordstrom_Sword
+      objectReference: {fileID: 0}
+    - target: {fileID: 1051571768989249988, guid: 2a6f6f2ced5e0b24faf27dbd90950b90, type: 3}
+      propertyPath: m_TagString
+      value: EnemyWeapon
       objectReference: {fileID: 0}
     - target: {fileID: 2042953256698253358, guid: 2a6f6f2ced5e0b24faf27dbd90950b90, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1464,6 +1473,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2a6f6f2ced5e0b24faf27dbd90950b90, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1158139179}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2a6f6f2ced5e0b24faf27dbd90950b90, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1158139183}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2a6f6f2ced5e0b24faf27dbd90950b90, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1158139182}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2a6f6f2ced5e0b24faf27dbd90950b90, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1158139181}
     - targetCorrespondingSourceObject: {fileID: 1051571768989249988, guid: 2a6f6f2ced5e0b24faf27dbd90950b90, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1606122047}
@@ -2163,19 +2181,66 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1158139178}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7baa84c9a5c03cd46a0fa22fd5ea914b, type: 2}
+  m_Avatar: {fileID: 9000000, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+  m_Controller: {fileID: 9100000, guid: 63f64489db2f2a24a86ba717d1abbc95, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
+    'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:RightArm'\n\tTransform
+    'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tTransform 'mixamorig:RightFoot'\n\tTransform
+    'mixamorig:Head'\n\tTransform 'mixamorig:LeftUpLeg'\n\tand more ...\n\tFrom animation
+    clip 'mixamo.com'\n\tFrom animation clip 'mixamo.com'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1158139181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158139178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815e17f12ba0878428601f523c2e4c7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1158139182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158139178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06bdcf2551b4fa34187ad24c70e4dd4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 100
+  didJustDefend: 0
+--- !u!114 &1158139183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158139178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a9fb6788a8c3bd488ec7a3d5579958c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 617483491}
+  targetAnimator: {fileID: 617483490}
 --- !u!1 &1186616628
 GameObject:
   m_ObjectHideFlags: 0
@@ -2493,6 +2558,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shieldCollider: {fileID: 1290954900}
   isShieldActive: 0
+  myStatus: {fileID: 1158139182}
+  myAnimator: {fileID: 1158139179}
+  defendAnimationStateName: Defend
+  enemyWeaponTag: EnemyWeapon
+  isPlayerControlled: 0
 --- !u!65 &1290954900
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4086,6 +4156,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shieldCollider: {fileID: 1950217285}
   isShieldActive: 0
+  myStatus: {fileID: 0}
+  myAnimator: {fileID: 0}
+  defendAnimationStateName: Defend
+  enemyWeaponTag: EnemyWeapon
+  isPlayerControlled: 0
 --- !u!1001 &1966732074
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -2,32 +2,64 @@ using UnityEngine;
 
 public class Shield : MonoBehaviour
 {
-    public Collider shieldCollider; // Inspectorø°º≠ «“¥Á
+    [Header("Í≥µÌÜµ ÏÑ§Ï†ï")]
+    public Collider shieldCollider;
 
     [HideInInspector]
     public bool isShieldActive = false;
 
+    [Header("AI Ï†ÑÏö© ÏÑ§Ï†ï")]
+    public CharacterStatus myStatus;
+    public Animator myAnimator;
+    public string defendAnimationStateName = "Defend";
+    public string enemyWeaponTag = "EnemyWeapon";
+
+    [Header("ÌîåÎ†àÏù¥Ïñ¥ Ï†ÑÏö© ÏÑ§Ï†ï")]
+    public bool isPlayerControlled = false;
+
     void Start()
     {
         if (shieldCollider != null)
-            shieldCollider.enabled = false; // Ω√¿€ Ω√ ∫Ò»∞º∫»≠
+            shieldCollider.enabled = false;
     }
 
     void Update()
     {
-        // Left Shift ¥©∏£∏È πÊ∆– »∞º∫»≠
+        if (isPlayerControlled)
+        {
+            HandlePlayerInput();
+        }
+    }
+
+    void HandlePlayerInput()
+    {
+        // Left Shift ÌÇ§Î•º ÎàÑÎ•¥Î©¥ Î∞©Ìå® ÌôúÏÑ±Ìôî
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            isShieldActive = true;
-            if (shieldCollider != null)
-                shieldCollider.enabled = true;
+            isShieldActive = true; // isShieldActive Í∞íÏùÑ trueÎ°ú ÏÑ§Ï†ï
+            if (shieldCollider != null) shieldCollider.enabled = true;
+            if (myAnimator != null) myAnimator.SetBool("IsDefending", true);
         }
-        // Left Shift ∂º∏È πÊ∆– ∫Ò»∞º∫»≠
+        // Left Shift ÌÇ§Î•º ÎñºÎ©¥ Î∞©Ìå® ÎπÑÌôúÏÑ±Ìôî
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            isShieldActive = false;
-            if (shieldCollider != null)
-                shieldCollider.enabled = false;
+            isShieldActive = false; // isShieldActive Í∞íÏùÑ falseÎ°ú ÏÑ§Ï†ï
+            if (shieldCollider != null) shieldCollider.enabled = false;
+            if (myAnimator != null) myAnimator.SetBool("IsDefending", false);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (myStatus == null || myAnimator == null) return;
+
+        if (other.CompareTag(enemyWeaponTag))
+        {
+            if (myAnimator.GetCurrentAnimatorStateInfo(0).IsName(defendAnimationStateName))
+            {
+                myStatus.didJustDefend = true;
+                Debug.Log(gameObject.name + " Î∞©Ïñ¥ ÏÑ±Í≥µ!");
+            }
         }
     }
 }

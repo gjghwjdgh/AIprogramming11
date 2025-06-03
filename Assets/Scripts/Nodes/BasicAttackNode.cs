@@ -18,7 +18,7 @@ public class BasicAttackNode : Node
             return NodeState.FAILURE; // 쿨타임이면 실패
         }
 
-        animator.SetTrigger("Attack");
+        animator.SetTrigger("BasicAttack");
         cooldownManager.StartCooldown("BasicAttack", 2.0f); // [cite: 14]
         return NodeState.SUCCESS; // 공격 실행 성공
     }

@@ -5,6 +5,8 @@ public class CharacterStatus : MonoBehaviour
     // 캐릭터의 최대 체력과 현재 체력
     public float maxHealth = 100f;
     public float currentHealth;
+    public bool didJustDefend = false; // <-- 이 줄을 추가!
+
 
     void Awake()
     {
