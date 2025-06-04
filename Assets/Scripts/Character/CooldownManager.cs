@@ -3,29 +3,43 @@ using UnityEngine;
 
 public class CooldownManager : MonoBehaviour
 {
-    // 스킬 이름(string)과 쿨타임이 끝나는 시간(float)을 저장하는 딕셔너리
-    private Dictionary<string, float> cooldowns = new Dictionary<string, float>();
+    // 스킬 이름(string)과 해당 스킬의 쿨타임이 끝나는 게임 시간(float)을 저장
+    private Dictionary<string, float> skillCooldownEndTime = new Dictionary<string, float>();
 
-    // 쿨타임 시작 함수
+    /// <summary>
+    /// 특정 스킬의 쿨타임을 시작시킵니다.
+    /// </summary>
+    /// <param name="skillName">쿨타임을 적용할 스킬의 고유한 이름</param>
+    /// <param name="cooldownDuration">쿨타임 지속 시간 (초 단위)</param>
     public void StartCooldown(string skillName, float cooldownDuration)
     {
-        float cooldownEndTime = Time.time + cooldownDuration;
-        cooldowns[skillName] = cooldownEndTime;
-        // 디버깅용 로그
-        // Debug.Log(skillName + " cooldown started. Ends at: " + cooldownEndTime);
+        // 현재 게임 시간 + 쿨타임 지속 시간 = 쿨타임이 끝나는 시간
+        float endTime = Time.time + cooldownDuration;
+        skillCooldownEndTime[skillName] = endTime;
+        // Debug.Log(skillName + " 쿨타임 시작. 종료 시간: " + endTime); // 디버깅용
     }
 
-    // 쿨타임이 끝났는지 확인하는 함수
+    /// <summary>
+    /// 특정 스킬의 쿨타임이 완료되었는지 확인합니다.
+    /// </summary>
+    /// <param name="skillName">확인할 스킬의 이름</param>
+    /// <returns>쿨타임이 완료되었으면 true, 아니면 false</returns>
     public bool IsCooldownFinished(string skillName)
     {
-        // 쿨타임 목록에 스킬이 등록되지 않았거나,
-        // 등록은 되었지만 현재 시간이 쿨타임 종료 시간보다 크다면
-        if (!cooldowns.ContainsKey(skillName) || Time.time >= cooldowns[skillName])
+        // 만약 skillCooldownEndTime 딕셔너리에 해당 스킬이 등록되어 있지 않다면,
+        // 아직 한 번도 사용하지 않았거나 쿨타임이 없는 스킬로 간주하여 true 반환
+        if (!skillCooldownEndTime.ContainsKey(skillName))
         {
-            return true; // 쿨타임 완료 (스킬 사용 가능)
+            return true;
         }
 
-        // 위 조건에 해당하지 않으면 아직 쿨타임 중
+        // 해당 스킬의 쿨타임 종료 시간 <= 현재 게임 시간 이라면 쿨타임 완료
+        if (skillCooldownEndTime[skillName] <= Time.time)
+        {
+            return true;
+        }
+
+        // 그 외의 경우는 아직 쿨타임 진행 중
         return false;
     }
 }

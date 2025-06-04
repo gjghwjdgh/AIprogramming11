@@ -1,9 +1,12 @@
 using UnityEngine;
 
+// 파일 이름: SpinAttackNode.cs
 public class SpinAttackNode : Node
 {
     private Animator animator;
     private CooldownManager cooldownManager;
+    private string skillName = "SpinAttack";
+    private float cooldownDuration = 30f;     // 회전베기 쿨타임 (BT 초안 문서 기준)
 
     public SpinAttackNode(Transform agentTransform)
     {
@@ -13,16 +16,17 @@ public class SpinAttackNode : Node
 
     public override NodeState Evaluate()
     {
-        // "SpinAttack" 스킬의 쿨타임이 완료되었는지 확인
-        if (!cooldownManager.IsCooldownFinished("SpinAttack"))
+        if (!cooldownManager.IsCooldownFinished(skillName))
         {
-            return NodeState.FAILURE; // 쿨타임이면 실패
+            // Debug.Log(skillName + " 쿨타임 중...");
+            return NodeState.FAILURE;
         }
 
-        // "SpinAttack" 애니메이션 트리거 발동
-        animator.SetTrigger("SpinAttack");
-        // 10초 쿨타임 시작
-        cooldownManager.StartCooldown("SpinAttack", 10f);
+        animator.SetTrigger("SpinAttack"); // "SpinAttack" 파라미터는 Animator Controller에 정의 필요
+        Debug.Log(skillName + " 사용!");
+
+        cooldownManager.StartCooldown(skillName, cooldownDuration);
+
         return NodeState.SUCCESS;
     }
 }
