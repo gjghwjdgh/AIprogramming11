@@ -2185,16 +2185,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a9fb6788a8c3bd488ec7a3d5579958c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1847199887}
-  targetAnimator: {fileID: 1847199888}
+  target: {fileID: 1158139184}
+  targetAnimator: {fileID: 1158139179}
   criticalHealthThreshold: 90
   lowHealthThreshold: 100
   engageDistance: 10
-  optimalCombatDistanceMin: 2
-  optimalCombatDistanceMax: 4
+  optimalCombatDistanceMin: 1
+  optimalCombatDistanceMax: 1.5
   tooCloseDistance: 1
-  normalAttackStateName: "\uACF5\uACA90"
-  criticalAttackStateName: "\uACF5\uACA91"
+  normalAttackStateName: "\uACF5\uACA9"
+  criticalAttackStateName: "\uD68C\uC804\uBCA0\uAE30"
   postAttackLagStateNames:
   - "\uAE30\uBCF8\uC790\uC138"
   wideOpenStateNames:
@@ -2499,16 +2499,21 @@ MonoBehaviour:
   criticalHealthThreshold: 25
   lowHealthThreshold: 40
   engageDistance: 10
-  optimalCombatDistanceMin: 2
-  optimalCombatDistanceMax: 4
+  optimalCombatDistanceMin: 1
+  optimalCombatDistanceMax: 1.5
   tooCloseDistance: 1
-  normalAttackStateName: "\uACF5\uACA90"
-  criticalAttackStateName: "\uACF5\uACA91"
+  normalAttackStateName: "\uACF5\uACA9"
+  criticalAttackStateName: "\uD68C\uC804\uBCA0\uAE30"
   postAttackLagStateNames:
   - "\uAE30\uBCF8\uC790\uC138"
   wideOpenStateNames:
   - Stunned
   - KnockedDown
+--- !u!4 &1158139184 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2a6f6f2ced5e0b24faf27dbd90950b90, type: 3}
+  m_PrefabInstance: {fileID: 855976306}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1186616628
 GameObject:
   m_ObjectHideFlags: 0
@@ -4372,11 +4377,6 @@ MonoBehaviour:
 --- !u!4 &1847199887 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 542a721634608c743a26148a047c6c6e, type: 3}
-  m_PrefabInstance: {fileID: 871443463}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1847199888 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 542a721634608c743a26148a047c6c6e, type: 3}
   m_PrefabInstance: {fileID: 871443463}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1942709809
