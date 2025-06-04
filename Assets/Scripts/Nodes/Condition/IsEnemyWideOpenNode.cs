@@ -3,19 +3,19 @@ using UnityEngine;
 public class IsEnemyWideOpenNode : Node
 {
     private Animator targetAnimator;
-    private string[] wideOpenAnimationNames = { "KnockedDown", "Stunned" };
-
-    public IsEnemyWideOpenNode(Animator targetAnimator)
+    private string[] wideOpenAnimationNames; 
+    
+    public IsEnemyWideOpenNode(Animator targetAnimator, string[] animationNames)
     {
         this.targetAnimator = targetAnimator;
+        this.wideOpenAnimationNames = animationNames;
     }
 
     public override NodeState Evaluate()
     {
-        if (targetAnimator == null) return NodeState.FAILURE;
+        if (targetAnimator == null || wideOpenAnimationNames == null) return NodeState.FAILURE;
 
         AnimatorStateInfo stateInfo = targetAnimator.GetCurrentAnimatorStateInfo(0);
-
         foreach (var name in wideOpenAnimationNames)
         {
             if (stateInfo.IsName(name))
@@ -23,7 +23,6 @@ public class IsEnemyWideOpenNode : Node
                 return NodeState.SUCCESS;
             }
         }
-        
         return NodeState.FAILURE;
     }
 }

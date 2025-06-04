@@ -3,104 +3,118 @@ using System.Collections.Generic;
 
 public class BT_Paladin : MonoBehaviour
 {
-    // AI가 적으로 인식할 대상 (인스펙터에서 할당)
     public Transform target;
     public Animator targetAnimator;
 
-    // 행동 트리의 최상위 루트 노드
+    [Header("AI Behavior Parameters")]
+    public float criticalHealthThreshold = 25f;
+    public float lowHealthThreshold = 40f;
+    public float engageDistance = 10f;
+    public float optimalCombatDistanceMin = 2.0f;
+    public float optimalCombatDistanceMax = 4.0f;
+    public float tooCloseDistance = 1.0f;
+
+    // ▼▼▼ 상대방(플레이어)의 애니메이션 상태 이름을 여기에 정의합니다 (인스펙터에서 수정 가능하게 public으로) ▼▼▼
+    [Header("Opponent Animation State Names")]
+    public string normalAttackStateName = "공격0"; // 플레이어의 일반 공격 애니메이션 상태 이름
+    public string criticalAttackStateName = "공격1"; // 플레이어의 치명타/강공격 애니메이션 상태 이름 (예시)
+    // 플레이어의 공격 후딜레이나 빈틈 상태 이름들을 배열로 정의
+    public string[] postAttackLagStateNames = { "기본자세" }; // 공격 직후 '기본자세'로 돌아오는 것을 짧은 빈틈으로 가정
+    public string[] wideOpenStateNames = { "Stunned", "KnockedDown" }; // 플레이어가 넘어지거나 스턴 상태일 때 (플레이어 애니메이터에 이런 상태가 있어야 함)
+
+
     private Node root;
 
     void Start()
     {
-        // 이 곳에서 BT 초안 문서를 보며 코드로 트리를 만듭니다.
         root = new Selector(new List<Node>
         {
-            // 최우선 순위 1: 사망 처리
+            // --- 최우선 순위: 생존 ---
             new Sequence(new List<Node>
             {
-                new IsHealthLowNode(transform, 0f), // 자신의 체력 <= 0 이면
-                new DieNode(transform)              // 사망 행동
+                new IsHealthLowNode(transform, 0f),
+                new DieNode(transform)
             }),
 
-            // 우선 순위 2: 생존 및 방어 관련 행동 (Selector)
             new Selector(new List<Node>
             {
-                // 2-1. 치명적 공격 회피 (가장 먼저 체크)
                 new Sequence(new List<Node>
                 {
-                    new IsEnemyCritAttackDetectedNode(targetAnimator, "Enemy_Critical_Strike"), // 적의 치명타 감지
-                    new IsCooldownCompleteNode(transform, "Evade"),                              // 회피 쿨타임 완료
-                    new IsHealthLowNode(transform, 40f),                                         // 자신의 체력 < 40%
-                    new EvadeNode(transform)                                                     // 회피
+                    // 플레이어의 'criticalAttackStateName' 상태를 치명타로 감지
+                    new IsEnemyCritAttackDetectedNode(targetAnimator, criticalAttackStateName),
+                    new IsCooldownCompleteNode(transform, "Evade"),
+                    new IsHealthLowNode(transform, criticalHealthThreshold),
+                    new EvadeNode(transform, "Backward")
                 }),
-
-                // 2-2. 일반 공격 방어
                 new Sequence(new List<Node>
                 {
-                    new IsEnemyAttackImminentNode(targetAnimator, "Enemy_Attack"), // 적의 일반 공격 감지
-                    new IsCooldownCompleteNode(transform, "Defend"),             // 방어 쿨타임 완료
-                    new IsEnemyInDistanceNode(transform, target, 2.5f),            // 적이 근접 거리에 있음
-                    new DefendNode(transform)                                    // 방어
+                    // 플레이어의 'normalAttackStateName' 상태를 일반 공격으로 감지
+                    new IsEnemyAttackImminentNode(targetAnimator, normalAttackStateName),
+                    new IsCooldownCompleteNode(transform, "Defend"),
+                    new IsEnemyInDistanceNode(transform, target, optimalCombatDistanceMin + 0.5f),
+                    new DefendNode(transform)
                 })
             }),
 
-            // 우선 순위 3: 반격 및 기회 창출 (Selector)
+            // --- 우선 순위: 기회 포착 및 반격 ---
             new Selector(new List<Node>
             {
-                // 3-1. 방어 성공 직후 반격
                 new Sequence(new List<Node>
                 {
-                    new DidDefendSucceedNode(transform),            // (새로운 조건) 방금 방어에 성공했다면
-                    new IsEnemyInPostAttackLagNode(targetAnimator), // (새로운 조건) 적이 공격 후딜 상태라면
-                    new Selector(new List<Node> // 반격 수단 선택
+                    new DidDefendSucceedNode(transform),
+                    // 플레이어가 'postAttackLagStateNames' 중 하나의 상태일 때를 후딜레이로 감지
+                    new IsEnemyInPostAttackLagNode(targetAnimator, postAttackLagStateNames),
+                    new IsEnemyInDistanceNode(transform, target, optimalCombatDistanceMin + 1.0f),
+                    new Selector(new List<Node>
                     {
-                        // 빠른 반격이 필요하면 일반 공격
-                        new BasicAttackNode(transform),
-                        // 경직을 유도하고 싶으면 발차기
-                        new KickAttackNode(transform)
-                    })
-                })
-            }),
-
-            // 우선 순위 4: 거리 조절 및 신중한 공격 (Selector)
-            new Selector(new List<Node>
-            {
-                // 4-1. 적이 너무 가까울 때 거리 벌리기
-                new Sequence(new List<Node>
-                {
-                    new IsEnemyInDistanceNode(transform, target, 1.0f), // 적이 1m 이내로 너무 가까우면
-                    new Selector(new List<Node> // 공간 확보 수단 선택
-                    {
-                        new KickAttackNode(transform), // 발차기로 밀어내거나
-                        new MoveAwayNode(transform, target)  // (새로운 행동) 뒤로 물러서기
+                        new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "KickAttack"), new KickAttackNode(transform) }),
+                        new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "BasicAttack"), new BasicAttackNode(transform) })
                     })
                 }),
-
-                // 4-2. 적의 큰 빈틈에 결정타 넣기
                 new Sequence(new List<Node>
                 {
-                    new IsEnemyWideOpenNode(targetAnimator),            // (새로운 조건) 적이 큰 빈틈을 보이면
-                    new IsCooldownCompleteNode(transform, "SpinAttack"),// 회전베기 쿨타임 완료
-                    new SpinAttackNode(transform)                       // 회전베기 공격
-                }),
-                
-                // 4-3. 안전할 때 짧은 단발 공격
-                new Sequence(new List<Node>
-                {
-                    new IsEnemyShowingSmallOpeningNode(targetAnimator), // (새로운 조건) 적이 짧은 빈틈을 보이면
-                    new IsCooldownCompleteNode(transform, "BasicAttack"),// 일반공격 쿨타임 완료
-                    new BasicAttackNode(transform)                      // 일반공격
+                    // 플레이어가 'wideOpenStateNames' 중 하나의 상태일 때를 큰 빈틈으로 감지
+                    new IsEnemyWideOpenNode(targetAnimator, wideOpenStateNames),
+                    new IsCooldownCompleteNode(transform, "SpinAttack"),
+                    new IsEnemyInDistanceNode(transform, target, optimalCombatDistanceMax),
+                    new SpinAttackNode(transform)
                 })
             }),
 
-            // 최후 순위 5: 기본 행동 (적에게 접근 또는 대기)
-            new MoveNode(transform, target) // 위 모든 조건에 해당하지 않으면 일단 적에게 접근
+            // --- 우선 순위: 주도적인 전투 운영 및 위치 선정 ---
+            new Selector(new List<Node>
+            {
+                new Sequence(new List<Node>
+                {
+                    new IsEnemyInDistanceNode(transform, target, tooCloseDistance),
+                    new Selector(new List<Node>
+                    {
+                        new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "KickAttack"), new KickAttackNode(transform) }),
+                        new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "Evade"), new EvadeNode(transform, "Backward") }),
+                        new MoveAwayNode(transform, target)
+                    })
+                }),
+                new Sequence(new List<Node>
+                {
+                    // 플레이어가 'postAttackLagStateNames' 중 하나를 작은 빈틈으로 간주
+                    new IsEnemyShowingSmallOpeningNode(targetAnimator, postAttackLagStateNames),
+                    new IsCooldownCompleteNode(transform, "BasicAttack"),
+                    new IsSafeToAttackNode(transform, targetAnimator, lowHealthThreshold),
+                    new IsEnemyInDistanceNode(transform, target, optimalCombatDistanceMax),
+                    new BasicAttackNode(transform)
+                }),
+                new Sequence(new List<Node>
+                {
+                    new IsNotInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
+                    new MaintainDistanceNode(transform, target, (optimalCombatDistanceMin + optimalCombatDistanceMax) / 2)
+                })
+            }),
+            new IdleNode(transform)
         });
     }
 
     void Update()
     {
-        // 매 프레임마다 트리의 루트부터 평가를 시작합니다.
         if (root != null)
         {
             root.Evaluate();

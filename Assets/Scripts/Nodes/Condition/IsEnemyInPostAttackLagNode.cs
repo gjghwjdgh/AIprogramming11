@@ -1,29 +1,28 @@
 using UnityEngine;
 
-public class IsEnemyShowingSmallOpeningNode : Node
+public class IsEnemyInPostAttackLagNode : Node
 {
     private Animator targetAnimator;
-    private string[] smallOpeningAnimationNames = { "Enemy_Attack_Recovery_Short" };
+    private string[] lagAnimationNames;
 
-    public IsEnemyShowingSmallOpeningNode(Animator targetAnimator)
+    public IsEnemyInPostAttackLagNode(Animator targetAnimator, string[] animationNames)
     {
         this.targetAnimator = targetAnimator;
+        this.lagAnimationNames = animationNames;
     }
 
     public override NodeState Evaluate()
     {
-        if (targetAnimator == null) return NodeState.FAILURE;
+        if (targetAnimator == null || lagAnimationNames == null) return NodeState.FAILURE;
 
         AnimatorStateInfo stateInfo = targetAnimator.GetCurrentAnimatorStateInfo(0);
-
-        foreach (var name in smallOpeningAnimationNames)
+        foreach (var name in lagAnimationNames)
         {
             if (stateInfo.IsName(name))
             {
                 return NodeState.SUCCESS;
             }
         }
-        
         return NodeState.FAILURE;
     }
 }
