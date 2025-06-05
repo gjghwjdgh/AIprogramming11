@@ -31,8 +31,8 @@ public class EvadeNode : Node
         Vector3 evadeVector = GetDirectionVector();
         agentTransform.position += evadeVector * evadeDistance;
 
-        // 10초 쿨타임을 시작합니다.
-        cooldownManager.StartCooldown("Evade", 10f);
+        // 30초 쿨타임을 시작합니다.
+        cooldownManager.StartCooldown("Evade", 30f);
 
         return NodeState.SUCCESS;
     }
