@@ -2496,8 +2496,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1031497033}
   targetAnimator: {fileID: 1031497040}
-  criticalHealthThreshold: 50
-  lowHealthThreshold: 100
+  criticalHealthThreshold: 25
+  lowHealthThreshold: 40
   engageDistance: 10
   optimalCombatDistanceMin: 1
   optimalCombatDistanceMax: 1.5
@@ -3231,7 +3231,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
