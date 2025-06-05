@@ -2673,11 +2673,19 @@ MonoBehaviour:
   criticalHealthThreshold: 30
   lowHealthThreshold: 50
   engageDistance: 10
-  optimalCombatDistanceMin: 1
-  optimalCombatDistanceMax: 2
-  tooCloseDistance: 0.5
+  tooCloseDistance: 0
+  strongAttackCounterRange: 2.8
+  feintStepDistance: 1
+  afterAttackRepositionChance: 0.6
+  basicAttackRange: 2.2
+  kickAttackRange: 2
+  spinAttackRange: 3
   normalAttackStateName: "\uACF5\uACA9"
   criticalAttackStateName: "\uD68C\uC804\uBCA0\uAE30"
+  defendStateName: "\uBC29\uC5B4"
+  <optimalCombatDistanceMin>k__BackingField: 1
+  <optimalCombatDistanceMax>k__BackingField: 3
+  <idleStateName>k__BackingField: "\uAE30\uBCF8\uC790\uC138"
   postAttackLagStateNames:
   - "\uAE30\uBCF8\uC790\uC138"
   wideOpenStateNames:
@@ -3543,10 +3551,15 @@ MonoBehaviour:
   lowHealthThreshold: 30
   engageDistance: 5
   optimalCombatDistanceMin: 1
-  optimalCombatDistanceMax: 1.5
-  tooCloseDistance: 0.8
+  optimalCombatDistanceMax: 3
+  tooCloseDistance: 0
+  basicAttackRange: 2
+  kickAttackRange: 1.8
+  spinAttackRange: 2.5
   normalAttackStateName: "\uACF5\uACA9"
   criticalAttackStateName: "\uD68C\uC804\uBCA0\uAE30"
+  defendStateName: "\uBC29\uC5B4"
+  opponentIdleStateName: "\uAE30\uBCF8\uC790\uC138"
   postAttackLagStateNames:
   - "\uAE30\uBCF8\uC790\uC138"
   wideOpenStateNames:
