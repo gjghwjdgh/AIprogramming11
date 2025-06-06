@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Hurtbox
   - EnemyWeapon
+  - Sword
   layers:
   - Default
   - TransparentFX

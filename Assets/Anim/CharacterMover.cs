@@ -3,8 +3,10 @@ using System.Collections;
 
 public class RootMotionMover : MonoBehaviour
 {
-    private Animator animator;
+    public Animator animator;
     public TrailRenderer swordTrail;
+
+    public bool isDodgging = false;
 
     public enum AttackType { Q_Attack = 0, E_Kick = 1, R_Attack = 2 }
     private AttackType currentAttackType;
@@ -23,10 +25,14 @@ public class RootMotionMover : MonoBehaviour
     public AudioClip wKeySfx;
     public AudioClip sKeySfx;
 
+    private Rigidbody rBody;
+
     void Start()
     {
         animator = GetComponent<Animator>();
+        rBody = GetComponent<Rigidbody>();
         animator.applyRootMotion = true;
+
 
         if (swordTrail != null)
             swordTrail.enabled = false;
@@ -37,53 +43,56 @@ public class RootMotionMover : MonoBehaviour
         }
     }
 
-    void Update()
+    //void Update()
+    //{
+        //float v = 0.0f;
+
+        //if (!isAttacking)
+        //{
+        //    if (Input.GetKey(KeyCode.W)) v = 1.0f;
+        //    else if (Input.GetKey(KeyCode.S)) v = -1.0f;
+        //}
+
+        //animator.SetFloat("v", v);
+
+        //if (soundManager != null)
+        //{
+        //    bool shouldPlayWalkingSound = !isAttacking && Input.GetKey(KeyCode.W) && v > 0;
+
+        //    if (shouldPlayWalkingSound && wKeySfx != null)
+        //    {
+        //        soundManager.PlayWalkingSound(wKeySfx);
+        //    }
+        //    else
+        //    {
+        //        soundManager.StopWalkingSound();
+        //    }
+
+        //    if (!isAttacking && Input.GetKeyDown(KeyCode.S) && sKeySfx != null)
+        //    {
+        //        soundManager.PlaySoundEffect(sKeySfx);
+        //    }
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.Q) && !isAttacking)
+        //{
+        //    StartAttack(AttackType.Q_Attack, qAttackTrailDuration, qAttackTrailDelay);
+        //}
+        //if (Input.GetKeyDown(KeyCode.E) && !isAttacking)
+        //{
+        //    StartAttack(AttackType.E_Kick);
+        //}
+        //if (Input.GetKeyDown(KeyCode.R) && !isAttacking)
+        //{
+        //    StartAttack(AttackType.R_Attack, rAttackTrailDuration, rAttackTrailDelay);
+        //}
+    //}
+
+    public void StartAttack(AttackType attackType, float trailDuration = 0f, float trailDelay = 0f)
     {
-        float v = 0.0f;
 
-        if (!isAttacking)
-        {
-            if (Input.GetKey(KeyCode.W)) v = 1.0f;
-            else if (Input.GetKey(KeyCode.S)) v = -1.0f;
-        }
+        if (isAttacking) return;
 
-        animator.SetFloat("v", v);
-
-        if (soundManager != null)
-        {
-            bool shouldPlayWalkingSound = !isAttacking && Input.GetKey(KeyCode.W) && v > 0;
-
-            if (shouldPlayWalkingSound && wKeySfx != null)
-            {
-                soundManager.PlayWalkingSound(wKeySfx);
-            }
-            else
-            {
-                soundManager.StopWalkingSound();
-            }
-
-            if (!isAttacking && Input.GetKeyDown(KeyCode.S) && sKeySfx != null)
-            {
-                soundManager.PlaySoundEffect(sKeySfx);
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q) && !isAttacking)
-        {
-            StartAttack(AttackType.Q_Attack, qAttackTrailDuration, qAttackTrailDelay);
-        }
-        if (Input.GetKeyDown(KeyCode.E) && !isAttacking)
-        {
-            StartAttack(AttackType.E_Kick);
-        }
-        if (Input.GetKeyDown(KeyCode.R) && !isAttacking)
-        {
-            StartAttack(AttackType.R_Attack, rAttackTrailDuration, rAttackTrailDelay);
-        }
-    }
-
-    void StartAttack(AttackType attackType, float trailDuration = 0f, float trailDelay = 0f)
-    {
         isAttacking = true;
         currentAttackType = attackType;
 
@@ -159,32 +168,76 @@ public class RootMotionMover : MonoBehaviour
 
     void OnAnimatorMove()
     {
-        if (currentAttackType == AttackType.R_Attack && isAttacking)
-        {
-            transform.position += animator.deltaPosition;
-        }
-        else
+
+        if(animator && rBody)
         {
             Vector3 deltaPos = animator.deltaPosition;
-            deltaPos.y = 0.0f;
-            transform.position += deltaPos;
+            deltaPos.y = 0.0f; // Y 이동은 막기 (바닥 뚫림 방지)
+
+
+            Vector3 newPos = rBody.position + deltaPos;
+            newPos.y = 0f; // 최종 위치 Y를 강제로 지면으로 고정!
+
+            rBody.MovePosition(newPos);
+            rBody.MoveRotation(transform.rotation * animator.deltaRotation);
         }
 
-        transform.rotation *= animator.deltaRotation;
+        //// Rigidbody로 Physics 이동 처리
+        //rBody.MovePosition(transform.position + deltaPos);
+        //rBody.MoveRotation(transform.rotation * animator.deltaRotation);
 
-        // 방어 모션 처리 (선택적)
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            animator.SetBool("isDefending", true);
-        }
-        else
-        {
-            animator.SetBool("isDefending", false);
-        }
+        //if (currentattacktype == attacktype.r_attack && isattacking)
+        //{
+        //    transform.position += animator.deltaposition;
+        //}
+        //else
+        //{
+        //    vector3 deltapos = animator.deltaposition;
+        //    deltapos.y = 0.0f;
+        //    transform.position += deltapos;
+        //}
+
+        //transform.rotation *= animator.deltarotation;
+
+        ////// 방어 모션 처리 (선택적)
+        ////if (input.getkey(keycode.leftshift))
+        ////{
+        ////    animator.setbool("isdefending", true);
+        ////}
+        ////else
+        ////{
+        ////    animator.setbool("isdefending", false);
+        ////}
     }
+
+
+
+
+    public void SetDefend(bool isDefending)
+    {
+        animator.SetBool("isDefending", isDefending);
+    }
+
+    public void Dodge()
+    {
+        //if (isDodgging) return;  // 중복 방지
+
+        animator.SetTrigger("dodgeTrigger");
+        isDodgging = true;
+    }
+
+    // 애니메이션 이벤트로 끝났을 때 호출
+    public void AnimationFinished_Dodge()
+    {
+        isDodgging = false;
+    }
+
+
 
     public void AnimationFinished_SetAttackingFalse()
     {
         isAttacking = false;
     }
+
+
 }

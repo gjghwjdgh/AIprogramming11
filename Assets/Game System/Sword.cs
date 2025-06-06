@@ -4,6 +4,10 @@ public class Sword : MonoBehaviour
 {
     public float damage = 10f;
 
+    private Vector3 lastPosition;
+    public Vector3 velocity { get; private set; }
+    public Vector3 acceleration { get; private set; }
+
     private void OnTriggerEnter(Collider other)
     {
         // 방패에 먼저 닿았는지 체크
@@ -21,5 +25,13 @@ public class Sword : MonoBehaviour
         {
             target.TakeDamage(damage);
         }
+    }
+
+    private void Update()
+    {
+        Vector3 currentVelocity = (transform.position - lastPosition) / Time.deltaTime;
+        acceleration = (currentVelocity - velocity) / Time.deltaTime;
+        velocity = currentVelocity;
+        lastPosition = transform.position;
     }
 }
