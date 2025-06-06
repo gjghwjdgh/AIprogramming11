@@ -35,7 +35,7 @@ public class BattleAgent : Agent
     {
         // 에피소드 초기화
         currentHealth = maxHealth;
-        transform.localPosition = new Vector3(Random.Range(-3f, 3f), 0, Random.Range(-3f, 3f));
+        transform.position = new Vector3(-214.78f, 0f, 105.03f);
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 

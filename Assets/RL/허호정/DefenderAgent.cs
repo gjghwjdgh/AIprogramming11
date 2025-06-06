@@ -34,7 +34,7 @@ public class DefenderAgent : Agent
     public override void OnEpisodeBegin()
     {
         currentHealth = maxHealth;
-        transform.localPosition = new Vector3(Random.Range(-3f, 3f), 0, Random.Range(-3f, 3f));
+        transform.localPosition = new Vector3(-205.6707f, 0f, 104.2728f); // 예: 오른쪽 플레이어
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
