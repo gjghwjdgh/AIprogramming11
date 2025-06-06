@@ -4,6 +4,8 @@ using System.Collections;
 public class RootMotionMover : MonoBehaviour
 {
     private Animator animator;
+    private Rigidbody rb; // Rigidbody 변수 추가
+
     public TrailRenderer swordTrail;
 
     public enum AttackType { Q_Attack = 0, E_Kick = 1, R_Attack = 2 }
@@ -26,7 +28,13 @@ public class RootMotionMover : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
         animator.applyRootMotion = true;
+
+        if (rb != null)
+        {
+            rb.isKinematic = false; // 코드를 통해 isKinematic을 false로 설정
+        }
 
         if (swordTrail != null)
             swordTrail.enabled = false;
@@ -79,6 +87,16 @@ public class RootMotionMover : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && !isAttacking)
         {
             StartAttack(AttackType.R_Attack, rAttackTrailDuration, rAttackTrailDelay);
+        }
+        
+        // 방어 모션 처리 (Update로 이동)
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            animator.SetBool("isDefending", true);
+        }
+        else
+        {
+            animator.SetBool("isDefending", false);
         }
     }
 
@@ -133,14 +151,14 @@ public class RootMotionMover : MonoBehaviour
         yield return new WaitForSeconds(animationLength);
         isAttacking = false;
 
-        // R 공격 끝났을 때 위치 보정
         if (currentAttackType == AttackType.R_Attack)
         {
-            Vector3 fixedPos = transform.position;
+            Vector3 fixedPos = rb.position; // transform.position 대신 rb.position 사용
             fixedPos.y = 0.0f;
-            transform.position = fixedPos;
+            rb.MovePosition(fixedPos); // transform.position = 대신 rb.MovePosition 사용
         }
     }
+
 
     float GetAnimationLength(AttackType attackType)
     {
@@ -159,28 +177,19 @@ public class RootMotionMover : MonoBehaviour
 
     void OnAnimatorMove()
     {
-        if (currentAttackType == AttackType.R_Attack && isAttacking)
-        {
-            transform.position += animator.deltaPosition;
-        }
-        else
-        {
-            Vector3 deltaPos = animator.deltaPosition;
-            deltaPos.y = 0.0f;
-            transform.position += deltaPos;
-        }
+        if (rb == null) return; // Rigidbody가 없으면 실행하지 않음
 
-        transform.rotation *= animator.deltaRotation;
+        // 이동 처리: Rigidbody의 MovePosition 사용
+        Vector3 newPosition = rb.position + animator.deltaPosition;
+        rb.MovePosition(newPosition);
 
-        // 방어 모션 처리 (선택적)
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            animator.SetBool("isDefending", true);
-        }
-        else
-        {
-            animator.SetBool("isDefending", false);
-        }
+        // 회전 처리: Rigidbody의 MoveRotation 사용
+        Quaternion newRotation = rb.rotation * animator.deltaRotation;
+        rb.MoveRotation(newRotation);
+
+        // R 공격 시 Y축 보정 로직은 더 이상 필요 없을 수 있으나,
+        // 애니메이션 자체에 문제가 있다면 ResetAttackStateAfterAnimation 코루틴에서 처리하는 것이 좋습니다.
+        // OnAnimatorMove에서는 물리 업데이트에만 집중하도록 합니다.
     }
 
     public void AnimationFinished_SetAttackingFalse()
