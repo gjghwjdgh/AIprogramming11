@@ -173,13 +173,14 @@ public class RootMotionMover : MonoBehaviour
         {
             Vector3 deltaPos = animator.deltaPosition;
             deltaPos.y = 0.0f; // Y 이동은 막기 (바닥 뚫림 방지)
+            transform.position += deltaPos;
+            transform.rotation *= animator.deltaRotation;
 
+            //Vector3 newPos = rBody.position + deltaPos;
+            //newPos.y = 0f; // 최종 위치 Y를 강제로 지면으로 고정!
 
-            Vector3 newPos = rBody.position + deltaPos;
-            newPos.y = 0f; // 최종 위치 Y를 강제로 지면으로 고정!
-
-            rBody.MovePosition(newPos);
-            rBody.MoveRotation(transform.rotation * animator.deltaRotation);
+            //rBody.MovePosition(newPos);
+            //rBody.MoveRotation(transform.rotation * animator.deltaRotation);
         }
 
         //// Rigidbody로 Physics 이동 처리

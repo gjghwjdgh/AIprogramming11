@@ -170,7 +170,9 @@ public class MLtest : Agent
                 AddReward(0.01f);
                 break;
             case 2: // Move Backward
-                rootMotionMover.animator.SetFloat("v", -1.0f); // 후진 애니메이션 트리거
+                rootMotionMover.animator.SetFloat("v", -2.0f); // 후진 애니메이션 트리거
+                                                              // 물리 이동만 처리
+  
                 AddReward(0.01f);
                 break;
             case 3: // Dodge
