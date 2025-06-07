@@ -21,7 +21,7 @@ public class DefendNode : Node
             return NodeState.FAILURE;
         }
 
-        actuator.SetDefend(true);
+        // actuator.SetDefend(true);
         actuator.OnActionStart(); // 행동 시작 알림
         cooldownManager.StartCooldown(skillName, cooldownDuration);
 

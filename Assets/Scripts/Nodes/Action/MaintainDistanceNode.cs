@@ -31,9 +31,10 @@ public class MaintainDistanceNode : Node
         }
         else
         {
+            actuator.SetMovement(0);
             actuator.SetRotation(Quaternion.LookRotation(targetTransform.position - agentTransform.position));
             actuator.SetMovement(distance > idealDistance ? 1f : -1f);
-            return NodeState.RUNNING; // "목표를 향해 아직 이동 중이다!"
+            return NodeState.SUCCESS;
         }
     }
 }

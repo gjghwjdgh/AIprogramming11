@@ -97,9 +97,15 @@ public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
                 new Sequence(new List<Node>
                 {
                     new IsEnemyInDistanceNode(transform, target, tooCloseDistance),
-                    new ActionLoggerNode(this, "전술적 후퇴", new MoveAwayNode(transform, target))
+                    new ActionLoggerNode(this, "전술적 후퇴", new MaintainDistanceNode(transform, target, (optimalCombatDistanceMin + optimalCombatDistanceMax) / 2f, 0.3f))
                 }),
 
+                // 4-3. 너무 멀 때: 타겟에게 접근
+                new Sequence(new List<Node>
+                {
+                    new IsNotInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
+                    new ActionLoggerNode(this, "타겟에게 접근", new MaintainDistanceNode(transform, target, (optimalCombatDistanceMin + optimalCombatDistanceMax) / 2f, 0.3f))
+                }),
                 // 4-2. 최적 교전 거리일 때: 공격 또는 간 보기
                 new Sequence(new List<Node>
                 {
@@ -125,20 +131,14 @@ public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
                             })
                         }),
                         // 할 게 없으면 -> 간 보기
-                        new Sequence(new List<Node>
-                        {
-                            new IsCooldownCompleteNode(transform, "Strafe"),
-                            new ActionLoggerNode(this, "간 보기(스트레이프)", new StrafeNode(transform))
-                        })
+                        // new Sequence(new List<Node>
+                        // {
+                        //     new IsCooldownCompleteNode(transform, "Strafe"),
+                        //     new ActionLoggerNode(this, "간 보기(스트레이프)", new StrafeNode(transform))
+                        // })
                     })
                 }),
 
-                // 4-3. 너무 멀 때: 타겟에게 접근
-                new Sequence(new List<Node>
-                {
-                    new IsNotInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
-                    new ActionLoggerNode(this, "타겟에게 접근", new MaintainDistanceNode(transform, target, (optimalCombatDistanceMin + optimalCombatDistanceMax) / 2f, 0.1f))
-                })
             }),
 
             // --- 최후 순위: 대기 ---

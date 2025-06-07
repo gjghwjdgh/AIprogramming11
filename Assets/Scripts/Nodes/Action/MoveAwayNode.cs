@@ -8,7 +8,7 @@ public class MoveAwayNode : Node
     private PaladinActuator actuator;
     private CooldownManager cooldownManager;
     private string cooldownName = "Reposition";
-    private float cooldownDuration = 2f;
+    private float cooldownDuration = 0.02f;
 
     // 생성자가 이제 Transform 2개를 받도록 수정
     public MoveAwayNode(Transform agentTransform, Transform targetTransform)

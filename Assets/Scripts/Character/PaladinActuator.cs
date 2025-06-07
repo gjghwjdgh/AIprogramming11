@@ -19,22 +19,6 @@ public class PaladinActuator : MonoBehaviour
         IsActionInProgress = false; // 초기 상태는 행동이 진행 중이 아님
     }
 
-    //     // PaladinActuator.cs에 이 Update 함수를 임시로 추가하세요.
-    // private void Update()
-    // {
-    //     // W 키를 누르고 있는 동안 v 파라미터를 1로 설정
-    //     if (Input.GetKey(KeyCode.W))
-    //     {
-    //         animator.SetFloat("v", 1f);
-    //         // 콘솔에 현재 상태를 직접 출력해서 확인
-    //         Debug.Log("W Key Pressed: Setting v = 1");
-    //     }
-    //     else
-    //     {
-    //         // W 키를 떼면 v 파라미터를 0으로 설정
-    //         animator.SetFloat("v", 0f);
-    //     }
-    // }
 
 
 
