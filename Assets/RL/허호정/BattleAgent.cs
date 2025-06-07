@@ -33,11 +33,16 @@ public class BattleAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        // 에피소드 초기화
         currentHealth = maxHealth;
-        rb.linearVelocity = Vector3.zero;
+
+#pragma warning disable 0618
+        rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+#pragma warning restore 0618
+
         isAttacking = false;
+        animator.SetFloat("v", 0);
+        animator.SetBool("isDefending", false);
         transform.position = new Vector3(-214.78f, 0f, 105.03f);
 
         attackTimer = 0f;
@@ -47,23 +52,17 @@ public class BattleAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // --- [변경점 2] 절대 위치 대신 상대적, 정규화된 데이터 관측 ---
-
-        // 내 상태 (체력, 쿨타임) - 정규화
         sensor.AddObservation(currentHealth / maxHealth);
         sensor.AddObservation(attackTimer / attackCooldown);
         sensor.AddObservation(defendTimer / defendCooldown);
         sensor.AddObservation(dodgeTimer / dodgeCooldown);
 
-        // 적과의 관계 (상대 위치, 거리)
         if (enemy != null)
         {
-            // 나를 기준으로 한 적의 상대적 위치 (AI에게 더 유용한 정보)
             sensor.AddObservation(transform.InverseTransformPoint(enemy.position));
-            // 적과의 거리
-            sensor.AddObservation(Vector3.Distance(transform.position, enemy.position) / 10f); // 거리도 정규화 (최대 예상 거리로 나눔)
+            sensor.AddObservation(Vector3.Distance(transform.position, enemy.position) / 10f);
         }
-        else // 적이 없으면 0으로 채움
+        else
         {
             sensor.AddObservation(Vector3.zero);
             sensor.AddObservation(0f);
@@ -72,7 +71,6 @@ public class BattleAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        // --- [변경점 3] 행동 전, 적을 바라보도록 회전 ---
         if (enemy != null && !isAttacking)
         {
             Vector3 directionToEnemy = (enemy.position - transform.position).normalized;
@@ -81,27 +79,26 @@ public class BattleAgent : Agent
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
         }
 
-        int action = actions.DiscreteActions[0]; // 0~5
+        int action = actions.DiscreteActions[0];
 
         if (isAttacking) return;
 
-        // 타이머 감소
         attackTimer -= Time.deltaTime;
         defendTimer -= Time.deltaTime;
         dodgeTimer -= Time.deltaTime;
 
         switch (action)
         {
-            case 0: // Idle
+            case 0:
                 animator.SetFloat("v", 0);
                 break;
-            case 1: // Move Forward
+            case 1:
                 Move(Vector3.forward);
                 break;
-            case 2: // Move Backward
+            case 2:
                 Move(Vector3.back);
                 break;
-            case 3: // Attack
+            case 3:
                 if (attackTimer <= 0f)
                 {
                     PerformAttack();
@@ -109,17 +106,17 @@ public class BattleAgent : Agent
                 }
                 else
                 {
-                    AddReward(-0.3f); // 쿨 중 공격 시 패널티
+                    AddReward(-0.3f);
                 }
                 break;
-            case 4: // Defend
+            case 4:
                 if (defendTimer <= 0f)
                 {
                     PerformDefend();
                     defendTimer = defendCooldown;
                 }
                 break;
-            case 5: // Dodge
+            case 5:
                 if (dodgeTimer <= 0f)
                 {
                     PerformDodge();
@@ -128,7 +125,6 @@ public class BattleAgent : Agent
                 break;
         }
 
-        // 패배 조건 체크
         if (currentHealth <= 0)
         {
             SetReward(-5f);
@@ -150,7 +146,6 @@ public class BattleAgent : Agent
 
         if (enemy != null && Vector3.Distance(transform.position, enemy.position) < 1.5f)
         {
-            // 상대방 에이전트의 TakeDamage 호출
             BattleAgent otherAgent = enemy.GetComponent<BattleAgent>();
             if (otherAgent != null)
             {
@@ -160,7 +155,6 @@ public class BattleAgent : Agent
         }
         else
         {
-            // 헛스윙 패널티
             AddReward(-0.1f);
         }
 
@@ -170,23 +164,22 @@ public class BattleAgent : Agent
     void PerformDefend()
     {
         animator.SetBool("isDefending", true);
-        AddReward(+0.05f); // 방어 자세 유지에 대한 작은 보상 (지나치게 높으면 방어만 함)
+        AddReward(+0.05f);
         Invoke(nameof(ResetDefendState), 1.0f);
     }
 
     void PerformDodge()
     {
         animator.SetTrigger("dodge");
-        rb.MovePosition(rb.position + transform.right * -1.5f); // 오른쪽 키 기준 오른쪽으로 회피하도록 수정
+        rb.MovePosition(rb.position + transform.right * -1.5f);
         AddReward(-0.1f);
     }
 
     public void TakeDamage(float amount)
     {
-        // 방어 중일 때
         if (animator.GetBool("isDefending"))
         {
-            AddReward(+0.5f); // 방어 성공 시 보상
+            AddReward(+0.5f);
             return;
         }
 

@@ -233,9 +233,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6941528850226848994}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4236412956236278100}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
@@ -426,29 +423,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
   m_PrefabInstance: {fileID: 8292574341785554763}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6941528850226848994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9211072609602023962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31dd2a2d9aa054845acb74d7c491944c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  swordTrail: {fileID: 1779188867798283687}
-  qAttackTrailDuration: 1.2
-  rAttackTrailDuration: 1.7
-  qAttackTrailDelay: 0.2
-  rAttackTrailDelay: 0.2
-  soundManager: {fileID: 0}
-  qAttackSfx: {fileID: 8300000, guid: cce098e57bb074f4990755fafa9714cd, type: 3}
-  rAttackSfx: {fileID: 8300000, guid: f6bfb8f8edb4f13498614bda8cfe9f86, type: 3}
-  eKickSfx: {fileID: 8300000, guid: f1b02082996a15948b79b3120630cd72, type: 3}
-  wKeySfx: {fileID: 8300000, guid: 3e1777a577a327f4fa7a264cea9887da, type: 3}
-  sKeySfx: {fileID: 8300000, guid: 2190552460b3bcc4bb2ec7a769ed00d9, type: 3}
 --- !u!54 &4236412956236278100
 Rigidbody:
   m_ObjectHideFlags: 0

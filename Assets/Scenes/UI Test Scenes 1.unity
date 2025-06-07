@@ -1526,6 +1526,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1354137574765732631, guid: 14f4a54a9dae6be4ba1a5789c0d71ca4, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3756485828623255845, guid: 14f4a54a9dae6be4ba1a5789c0d71ca4, type: 3}
       propertyPath: m_Name
       value: BattleAgentObj
@@ -1655,7 +1659,6 @@ GameObject:
   - component: {fileID: 1116104411}
   - component: {fileID: 1116104410}
   - component: {fileID: 1116104414}
-  - component: {fileID: 1116104415}
   - component: {fileID: 1116104416}
   m_Layer: 0
   m_Name: Plane
@@ -1798,18 +1801,6 @@ Terrain:
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_TreeMotionVectorModeOverride: 3
---- !u!114 &1116104415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1116104409}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5da220d97b999154589c73c626433c5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!64 &1116104416
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2072,8 +2063,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0acb10eb226f58749b756fb2e959bf29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
+  player1: {fileID: 1076772343}
+  player2: {fileID: 1748549429}
   offset: {x: 0, y: 5, z: -10}
   distanceMultiplier: 1.5
   minPlayerDistance: 5
@@ -2818,78 +2809,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: DefenderAgentObj
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 6941528850226848994, guid: 9f03ae6e23d623347b395d0d8cb52b19, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 9211072609602023962, guid: 9f03ae6e23d623347b395d0d8cb52b19, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1748549431}
-    - targetCorrespondingSourceObject: {fileID: 9211072609602023962, guid: 9f03ae6e23d623347b395d0d8cb52b19, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1748549430}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f03ae6e23d623347b395d0d8cb52b19, type: 3}
---- !u!1 &1748549428 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9211072609602023962, guid: 9f03ae6e23d623347b395d0d8cb52b19, type: 3}
-  m_PrefabInstance: {fileID: 1748549427}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1748549429 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8403608125853722784, guid: 9f03ae6e23d623347b395d0d8cb52b19, type: 3}
   m_PrefabInstance: {fileID: 1748549427}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1748549430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1748549428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BrainParameters:
-    VectorObservationSize: 7
-    NumStackedVectorObservations: 1
-    m_ActionSpec:
-      m_NumContinuousActions: 0
-      BranchSizes: 06000000
-    VectorActionSize: 06000000
-    VectorActionDescriptions: []
-    VectorActionSpaceType: 0
-    hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
-  m_InferenceDevice: 0
-  m_BehaviorType: 0
-  m_BehaviorName: DefenderAgent
-  TeamId: 0
-  m_UseChildSensors: 1
-  m_UseChildActuators: 1
-  m_DeterministicInference: 0
-  m_ObservableAttributeHandling: 0
---- !u!114 &1748549431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1748549428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb36861be6e5e3f4bb8a5a90b15b918b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agentParameters:
-    maxStep: 0
-  hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
-  enemy: {fileID: 1076772343}
-  moveSpeed: 2
-  maxHealth: 100
 --- !u!1 &1768204785
 GameObject:
   m_ObjectHideFlags: 0
