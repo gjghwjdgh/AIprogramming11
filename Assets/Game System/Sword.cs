@@ -10,14 +10,15 @@ public class Sword : MonoBehaviour
     public Vector3 acceleration { get; private set; }
 
 
+
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Sword 충돌됨! other = " + other.name);
+
         // 방패에 먼저 닿았는지 체크
         Shield shield = other.GetComponent<Shield>();
         if (shield != null && shield.isShieldActive)
         {
-            // 방패가 활성화되어 있으면 데미지 무시
             Debug.Log("방패로 막음!");
             return;
         }
@@ -36,14 +37,30 @@ public class Sword : MonoBehaviour
             return;
         }
 
-        // Body에 닿았는지 체크
+        // 방어 상태 확인
+        RootMotionMover rootMotion = other.GetComponentInParent<RootMotionMover>();
+        if (rootMotion != null)
+        {
+            bool isDefending = rootMotion.animator.GetBool("isDefending");
+            Debug.Log($"{other.name}의 방어 상태: {isDefending}");
+
+            if (isDefending)
+            {
+                Debug.Log($"{other.name}가 방어 중! 데미지 무시.");
+                return; // 방어 중이면 데미지 안 줌
+            }
+        }
+
+        // Body에 닿았는지 체크 (방어 중이 아닌 경우만!)
         IDamageable target = other.GetComponent<IDamageable>();
         if (target != null)
         {
-            Debug.Log($"{owner.name}의 검이 {other.name}에게 데미지!"); Debug.Log($"{owner.name}의 검이 {other.name}에게 데미지!");
+            Debug.Log($"{owner.name}의 검이 {other.name}에게 데미지!");
             target.TakeDamage(damage);
         }
     }
+
+
 
     private void Update()
     {

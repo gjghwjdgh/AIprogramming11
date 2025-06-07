@@ -4191,6 +4191,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   swordTrail: {fileID: 1112553245}
   isDodgging: 0
+  isDefending: 0
   qAttackTrailDuration: 1.2
   rAttackTrailDuration: 1.7
   qAttackTrailDelay: 0.2
@@ -5306,6 +5307,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   swordTrail: {fileID: 911657979}
   isDodgging: 0
+  isDefending: 0
   qAttackTrailDuration: 1.2
   rAttackTrailDuration: 1.7
   qAttackTrailDelay: 0.2
