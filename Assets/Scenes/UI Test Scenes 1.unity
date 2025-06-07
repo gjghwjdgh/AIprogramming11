@@ -1578,8 +1578,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8068705245039630981, guid: 14f4a54a9dae6be4ba1a5789c0d71ca4, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -1590,11 +1589,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1076772345}
   m_SourcePrefab: {fileID: 100100000, guid: 14f4a54a9dae6be4ba1a5789c0d71ca4, type: 3}
---- !u!4 &1076772343 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4569578407097045919, guid: 14f4a54a9dae6be4ba1a5789c0d71ca4, type: 3}
-  m_PrefabInstance: {fileID: 1076772342}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1076772344 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3756485828623255845, guid: 14f4a54a9dae6be4ba1a5789c0d71ca4, type: 3}
@@ -1615,7 +1609,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
+  MaxStep: 100000
   enemy: {fileID: 1748549429}
   moveSpeed: 2
   maxHealth: 100
@@ -1929,7 +1923,6 @@ GameObject:
   - component: {fileID: 1186616630}
   - component: {fileID: 1186616629}
   - component: {fileID: 1186616632}
-  - component: {fileID: 1186616633}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2004,13 +1997,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1186616628}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.16590825, y: 0, z: 0, w: 0.9861412}
-  m_LocalPosition: {x: -210.57, y: 3.397, z: 98.875}
+  m_LocalRotation: {x: 0.46715835, y: 0, z: 0, w: 0.8841737}
+  m_LocalPosition: {x: -210.57, y: 6.7, z: 98.875}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 19.1, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 55.7, y: 0, z: 0}
 --- !u!114 &1186616632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2055,25 +2048,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &1186616633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1186616628}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0acb10eb226f58749b756fb2e959bf29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player1: {fileID: 1076772343}
-  player2: {fileID: 1748549429}
-  offset: {x: 0, y: 5, z: -10}
-  distanceMultiplier: 1.5
-  minPlayerDistance: 5
-  maxPlayerDistance: 20
-  smoothTime: 0.2
 --- !u!114 &1278695582 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5784895256579905887, guid: 17cbc357bf20de74485f5f5d54b77b72, type: 3}
