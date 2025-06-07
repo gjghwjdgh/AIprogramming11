@@ -1,16 +1,18 @@
-// using Unity.VisualScripting; // 비주얼 스크립팅을 사용하지 않는다면 이 줄은 삭제해도 됩니다.
 using UnityEngine;
 using UnityEngine.UI;
-// using TMPro; // UIManager에서 TextMeshPro를 사용하므로, TestUIController에서는 직접 필요 없을 수 있습니다.
 
 public class TestUIController : MonoBehaviour
 {
     public static TestUIController Instance { get; private set; } //KIM
 
-    public UICoolDown leftAttack;
+    public UICoolDown leftAttack1;
+    public UICoolDown leftAttack2;
+    public UICoolDown leftAttack3;
     public UICoolDown leftDefend;
     public UICoolDown leftDodge;
-    public UICoolDown rightAttack;
+    public UICoolDown rightAttack1;
+    public UICoolDown rightAttack2;
+    public UICoolDown rightAttack3;
     public UICoolDown rightDefend;
     public UICoolDown rightDodge;
 
@@ -61,10 +63,14 @@ public class TestUIController : MonoBehaviour
         }
 
         // 테스트용 쿨타임 발동
-        if (Input.GetKeyDown(KeyCode.Alpha1)) leftAttack.TriggerCooldown();
-        if (Input.GetKeyDown(KeyCode.Alpha2)) leftDefend.TriggerCooldown();
-        if (Input.GetKeyDown(KeyCode.Alpha3)) leftDodge.TriggerCooldown();
-        if (Input.GetKeyDown(KeyCode.Alpha8)) rightAttack.TriggerCooldown();
+        if (Input.GetKeyDown(KeyCode.Alpha1)) leftAttack1.TriggerCooldown();
+        if (Input.GetKeyDown(KeyCode.Alpha2)) leftAttack2.TriggerCooldown();
+        if (Input.GetKeyDown(KeyCode.Alpha3)) leftAttack3.TriggerCooldown();
+        if (Input.GetKeyDown(KeyCode.Alpha4)) leftDefend.TriggerCooldown();
+        if (Input.GetKeyDown(KeyCode.Alpha5)) leftDodge.TriggerCooldown();
+        if (Input.GetKeyDown(KeyCode.Alpha6)) rightAttack1.TriggerCooldown();
+        if (Input.GetKeyDown(KeyCode.Alpha7)) rightAttack2.TriggerCooldown();
+        if (Input.GetKeyDown(KeyCode.Alpha8)) rightAttack3.TriggerCooldown();
         if (Input.GetKeyDown(KeyCode.Alpha9)) rightDefend.TriggerCooldown();
         if (Input.GetKeyDown(KeyCode.Alpha0)) rightDodge.TriggerCooldown();
 
