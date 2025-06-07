@@ -64,6 +64,19 @@ public class MLtest2 : Agent
         rBody = GetComponent<Rigidbody>();
         lastSwordPosition = sword.transform.position;
         lastSwordVelocity = Vector3.zero;
+
+        // Sword에 소유자 등록
+        Sword swordScript = sword.GetComponent<Sword>();
+        if (swordScript != null)
+        {
+            swordScript.owner = this.gameObject;
+            Collider swordCollider = sword.GetComponent<Collider>();
+            Collider bodyCollider = GetComponent<Collider>();
+            if (swordCollider != null && bodyCollider != null)
+            {
+                Physics.IgnoreCollision(swordCollider, bodyCollider);
+            }
+        }
     }
     public Transform Target;
 
@@ -74,7 +87,7 @@ public class MLtest2 : Agent
         targetHealth = 100f; 
 
         // 중력 작용 직전에 정확히 바닥 위로 보정
-        Vector3 startPosition = new Vector3(-213.9f, 0.0f, 5.0f);
+        Vector3 startPosition = new Vector3(-214.36f, 0.0f, 5.0f);
         this.transform.localPosition = startPosition;
 
         //this.rBody.linearVelocity = Vector3.zero;

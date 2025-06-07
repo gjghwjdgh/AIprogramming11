@@ -61,6 +61,20 @@ public class MLtest : Agent
         rBody = GetComponent<Rigidbody>();
         lastSwordPosition = sword.transform.position;
         lastSwordVelocity = Vector3.zero;
+
+        // Sword에 소유자 등록
+        Sword swordScript = sword.GetComponent<Sword>();
+        if (swordScript != null)
+        {
+            swordScript.owner = this.gameObject;
+            Collider swordCollider = sword.GetComponent<Collider>();
+            Collider bodyCollider = GetComponent<Collider>();
+            if (swordCollider != null && bodyCollider != null)
+            {
+                Physics.IgnoreCollision(swordCollider, bodyCollider);
+            }
+        }
+
     }
     public Transform Target;
 
@@ -77,7 +91,7 @@ public class MLtest : Agent
         //this.rBody.linearVelocity = Vector3.zero;
         //this.rBody.angularVelocity = Vector3.zero;
 
-        Target.localPosition = new Vector3(-212.36f, 0.0f, 5.0f);
+        Target.localPosition = new Vector3(-214.36f, 0.0f, 5.0f);
     }
 
     public override void CollectObservations(VectorSensor sensor)
