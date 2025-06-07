@@ -43,7 +43,8 @@ public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
     string IPaladinParameters.idleStateName { get { return this.opponentIdleStateName; } }
     // --- 인터페이스 멤버 구현 끝 ---
 
-
+    private PaladinActuator actuator;
+    
     private CooldownManager cooldownManager; // 최적화를 위해 Start에서 한 번만 가져옴
 
     void Awake()
@@ -52,6 +53,12 @@ public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
         if (cooldownManager == null)
         {
             Debug.LogError("BT_Aggressive_Paladin: CooldownManager 컴포넌트가 없습니다!");
+        }
+
+        actuator = GetComponent<PaladinActuator>();
+        if (actuator == null)
+        {
+            Debug.LogError("BT_Aggressive_Paladin: PaladinActuator 컴포넌트가 없습니다!");
         }
     }
 
@@ -137,7 +144,7 @@ public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
                     new IsInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
                     new ShouldFeintNode(transform, target, "Aggressive"), 
                     new IsCooldownCompleteNode(transform, "FeintStep"),
-                    new FeintStepNode(transform, "ForwardShort", 1.0f), 
+                    new FeintStepNode(transform, "ForwardShort"), 
                     new IsEnemyInDistanceNode(transform, target, basicAttackRange), // 간 보기 후 공격 사거리 확인
                     new IsCooldownCompleteNode(transform, "BasicAttack"),
                     new BasicAttackNode(transform)
@@ -190,8 +197,11 @@ public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
 
     void Update()
     {
-        if (root != null)
+        if (root != null && actuator != null)
         {
+            actuator.SetDefend(false);
+            actuator.SetMovement(0);
+
             root.Evaluate();
         }
         // 동적 거리 조절 로직은 필요하다면 이전 답변처럼 추가 가능

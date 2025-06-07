@@ -139,7 +139,7 @@ public class BT_Defensive_Paladin : MonoBehaviour, IPaladinParameters
                     new IsInOptimalCombatRangeNode(transform, target, currentPreferredMinDistance, currentPreferredMaxDistance), // 적절한 거리에서만
                     new ShouldFeintNode(transform, target, "Defensive"), // 수비적인 간 보기 조건
                     new IsCooldownCompleteNode(transform, "FeintStep"),
-                    new FeintStepNode(transform, Random.value > 0.5f ? "LeftStep" : "RightStep", feintStepDistance), // 좌우로 짧게 움직이며 관찰
+                    new FeintStepNode(transform, Random.value > 0.5f ? "LeftStep" : "RightStep"), // 마지막 인자 삭제
                     new IdleNode(transform) // 간 본 후 바로 공격하지 않고 다시 상황 판단
                 }),
                 new Sequence(new List<Node> // 기본 거리 유지
