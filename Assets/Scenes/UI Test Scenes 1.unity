@@ -1526,6 +1526,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1093801970564140371, guid: 14f4a54a9dae6be4ba1a5789c0d71ca4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1354137574765732631, guid: 14f4a54a9dae6be4ba1a5789c0d71ca4, type: 3}
       propertyPath: m_IsKinematic
       value: 1
@@ -1544,7 +1548,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4569578407097045919, guid: 14f4a54a9dae6be4ba1a5789c0d71ca4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 105.03
+      value: 104.05
       objectReference: {fileID: 0}
     - target: {fileID: 4569578407097045919, guid: 14f4a54a9dae6be4ba1a5789c0d71ca4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2058,7 +2062,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1186616628}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0acb10eb226f58749b756fb2e959bf29, type: 3}
   m_Name: 
@@ -2761,6 +2765,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1452414991477142295, guid: 9f03ae6e23d623347b395d0d8cb52b19, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6941528850226848994, guid: 9f03ae6e23d623347b395d0d8cb52b19, type: 3}
       propertyPath: soundManager
       value: 
