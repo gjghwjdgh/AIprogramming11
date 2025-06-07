@@ -4100,7 +4100,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
+  MaxStep: 500
   sword: {fileID: 674388379}
   rootMotionMover: {fileID: 1508895968}
   agentHealth: 100
@@ -4166,15 +4166,15 @@ MonoBehaviour:
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 2
-      BranchSizes: 0000000000000000
+      BranchSizes: 0800000008000000
     VectorActionSize: 
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
-  m_BehaviorName: Agent3_behavior
+  m_BehaviorType: 0
+  m_BehaviorName: DefenderAgent
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
@@ -5386,7 +5386,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
+  MaxStep: 500
   sword: {fileID: 106905409}
   rootMotionMover: {fileID: 1847199885}
   agentHealth: 100
@@ -5410,15 +5410,15 @@ MonoBehaviour:
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 2
-      BranchSizes: 0000000000000000
+      BranchSizes: 0800000008000000
     VectorActionSize: 
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
-  m_BehaviorName: Agent1_behavior
+  m_BehaviorType: 0
+  m_BehaviorName: AgentBehavior
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1

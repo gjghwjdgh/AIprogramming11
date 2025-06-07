@@ -84,6 +84,10 @@ public class MLtest : Agent
         agentHealth = 100f;
         targetHealth = 100f;
 
+        //// UI 업데이트
+        //TestUIController.Instance.SetLeftHealth(agentHealth, 100f);
+        //TestUIController.Instance.SetRightHealth(targetHealth, 100f);
+
         // 중력 작용 직전에 정확히 바닥 위로 보정
         Vector3 startPosition = new Vector3(-217.8f, 0.0f, 5.0f); 
         this.transform.localPosition = startPosition;
@@ -211,6 +215,7 @@ public class MLtest : Agent
         //rootMotionMover.SetDefend(isDefending);
 
         // Agent나 Target이 죽으면 에피소드 종료
+
         if (targetHealth <= 0f)
         {
             float healthRatio = agentHealth / 100f;

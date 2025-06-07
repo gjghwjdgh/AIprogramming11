@@ -86,6 +86,10 @@ public class MLtest2 : Agent
         agentHealth = 100f;
         targetHealth = 100f;
 
+        //// UI 업데이트
+        //TestUIController.Instance.SetLeftHealth(agentHealth, 100f);
+        //TestUIController.Instance.SetRightHealth(targetHealth, 100f);
+
         // 중력 작용 직전에 정확히 바닥 위로 보정
         Vector3 startPosition = new Vector3(-214.36f, 0.0f, 5.0f);
         this.transform.localPosition = startPosition;
