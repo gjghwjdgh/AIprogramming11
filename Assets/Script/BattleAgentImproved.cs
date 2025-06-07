@@ -26,7 +26,7 @@ public class BattleAgentImproved : Agent
     private float dodgeTimer = 0f;
 
     private int stepCount = 0;
-    private const int maxStepLimit = 1000;
+    private const int maxStepLimit = 100000;
 
     public override void Initialize()
     {
@@ -49,7 +49,7 @@ public class BattleAgentImproved : Agent
         animator.SetFloat("v", 0);
         animator.SetBool("isDefending", false);
 
-        transform.position = new Vector3(Random.Range(-5f, 0f), 0f, Random.Range(-2f, 2f));
+        transform.position = new Vector3(Random.Range(-210f, -205f), 0f, Random.Range(-2f, 2f));
 
         attackTimer = 0f;
         defendTimer = 0f;
@@ -139,15 +139,28 @@ public class BattleAgentImproved : Agent
         float distanceToEnemy = enemy != null ? Vector3.Distance(transform.position, enemy.position) : 0f;
         AddReward(0.01f * (1.0f - Mathf.Clamp01(distanceToEnemy / 10f)));
 
-        if (currentHealth <= 0)
+        // 종료 조건 체크
+        if (currentHealth <= 0f)
         {
+            Debug.Log($"{gameObject.name} 패배 (체력 0)");
             SetReward(-1f);
             EndEpisode();
         }
         else if (stepCount >= maxStepLimit)
         {
+            Debug.Log($"{gameObject.name} 패배 (스텝 제한)");
             SetReward(-0.5f);
             EndEpisode();
+        }
+        else if (enemy != null)
+        {
+            BattleAgentImproved enemyAgent = enemy.GetComponent<BattleAgentImproved>();
+            if (enemyAgent != null && enemyAgent.currentHealth <= 0f)
+            {
+                Debug.Log($"{gameObject.name} 승리 (적 처치)");
+                SetReward(+1f);
+                EndEpisode();
+            }
         }
     }
 
@@ -205,9 +218,17 @@ public class BattleAgentImproved : Agent
 
         currentHealth -= amount;
         AddReward(-0.5f);
+
+        if (currentHealth <= 0f)
+        {
+            Debug.Log($"{gameObject.name} 패배 (피격으로 체력 0)");
+            SetReward(-1f);
+            EndEpisode();
+        }
     }
 
     private void ResetAttackState() => isAttacking = false;
+
     private void ResetDefendState()
     {
         isDefending = false;
