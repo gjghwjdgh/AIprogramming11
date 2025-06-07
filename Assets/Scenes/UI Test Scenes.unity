@@ -1952,6 +1952,38 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5465940246521907071, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5465940246521907071, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5465940246521907071, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7130058
+      objectReference: {fileID: 0}
+    - target: {fileID: 5465940246521907071, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5465940246521907071, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.70115817
+      objectReference: {fileID: 0}
+    - target: {fileID: 5465940246521907071, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5465940246521907071, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 89.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 5465940246521907071, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5567237881422871782, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -2029,19 +2061,16 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1847199893}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1847199891}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1847199890}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1847199889}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1847199888}
+      addedObject: {fileID: 1847199895}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1847199894}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1847199893}
     - targetCorrespondingSourceObject: {fileID: 1051571768989249988, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 106905413}
@@ -5436,21 +5465,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 542a721634608c743a26148a047c6c6e, type: 3}
   m_PrefabInstance: {fileID: 871443463}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1847199888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1847199884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DecisionPeriod: 5
-  DecisionStep: 0
-  TakeActionsBetweenDecisions: 1
 --- !u!54 &1847199889
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5478,7 +5492,7 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &1847199890
+--- !u!114 &1847199893
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5487,21 +5501,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 1847199884}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5308d7a4f0c0b70499d74a8ed7d428c7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DecisionPeriod: 5
+  DecisionStep: 0
+  TakeActionsBetweenDecisions: 1
+--- !u!114 &1847199894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847199884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cd9f82e560dcc9458f7a1e7d668b374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 100000
-  sword: {fileID: 106905409}
-  rootMotionMover: {fileID: 1847199893}
-  Target: {fileID: 1508895962}
-  agentHealth: 100
-  targetHealth: 100
-  forceMultiplier: 10
-  maxStepLimit: 1000
---- !u!114 &1847199891
+  enemy: {fileID: 1508895962}
+  moveSpeed: 2
+  maxHealth: 100
+--- !u!114 &1847199895
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5514,56 +5539,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 17
+    VectorObservationSize: 10
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
-      BranchSizes: 08000000
-    VectorActionSize: 08000000
+      BranchSizes: 06000000
+    VectorActionSize: 06000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
-  m_BehaviorName: BattleAgent
+  m_BehaviorName: BattleAgentImproved
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
   m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
---- !u!95 &1847199892 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 542a721634608c743a26148a047c6c6e, type: 3}
-  m_PrefabInstance: {fileID: 871443463}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1847199893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1847199884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31dd2a2d9aa054845acb74d7c491944c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 1847199892}
-  swordTrail: {fileID: 911657979}
-  isDodgging: 0
-  isDefending: 0
-  qAttackTrailDuration: 0.4
-  rAttackTrailDuration: 0.6
-  qAttackTrailDelay: 0.05
-  rAttackTrailDelay: 0.1
-  isAttacking: 0
-  soundManager: {fileID: 1428162187}
-  qAttackSfx: {fileID: 8300000, guid: cce098e57bb074f4990755fafa9714cd, type: 3}
-  rAttackSfx: {fileID: 8300000, guid: f6bfb8f8edb4f13498614bda8cfe9f86, type: 3}
-  eKickSfx: {fileID: 8300000, guid: f1b02082996a15948b79b3120630cd72, type: 3}
-  wKeySfx: {fileID: 8300000, guid: 3e1777a577a327f4fa7a264cea9887da, type: 3}
-  sKeySfx: {fileID: 8300000, guid: 2190552460b3bcc4bb2ec7a769ed00d9, type: 3}
 --- !u!1001 &1978233198
 PrefabInstance:
   m_ObjectHideFlags: 0
