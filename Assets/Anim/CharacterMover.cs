@@ -17,7 +17,7 @@ public class RootMotionMover : MonoBehaviour
     public float qAttackTrailDelay = 0.05f;
     public float rAttackTrailDelay = 0.1f;
 
-    private bool isAttacking = false;
+    public bool isAttacking = false;
 
     public SoundManager soundManager;
     public AudioClip qAttackSfx;

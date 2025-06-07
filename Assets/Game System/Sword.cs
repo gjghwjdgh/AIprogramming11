@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Sword : MonoBehaviour
 {
@@ -13,49 +13,58 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Sword Ãæµ¹µÊ! other = " + other.name);
+        Debug.Log("Sword ì¶©ëŒë¨! other = " + other.name);
 
-        // ¹æÆĞ¿¡ ¸ÕÀú ´ê¾Ò´ÂÁö Ã¼Å©
+        // ë°©íŒ¨ ì¶©ëŒ ì²´í¬
         Shield shield = other.GetComponent<Shield>();
         if (shield != null && shield.isShieldActive)
         {
-            Debug.Log("¹æÆĞ·Î ¸·À½!");
+            Debug.Log("ë°©íŒ¨ë¡œ ë§‰ìŒ!");
             return;
         }
 
-        // ÀÚ±â °Ë°ú ºÎµúÈù °æ¿ì ¹«½Ã
-        if (other.GetComponent<Sword>() != null && other.GetComponent<Sword>().owner == this.owner)
+        // ìê¸° ê²€ê³¼ ì¶©ëŒ ë¬´ì‹œ
+        Sword otherSword = other.GetComponent<Sword>();
+        if (otherSword != null && otherSword.owner == this.owner)
         {
-            Debug.Log("ÀÚ±â °Ë°ú Ãæµ¹ ¹«½Ã");
+            Debug.Log("ìê¸° ê²€ê³¼ ì¶©ëŒ ë¬´ì‹œ");
             return;
         }
 
-        // ÀÚ±â ÀÚ½ÅÀÇ ¸öÃ¼ ¹«½Ã
+        // ìê¸° ìì‹ ì˜ ëª¸ì²´ì™€ ì¶©ëŒ ë¬´ì‹œ
         if (other.transform.root.gameObject == owner)
         {
-            Debug.Log("ÀÚ±â ÀÚ½ÅÀÇ ¸öÃ¼¿Í Ãæµ¹ ¹«½Ã");
+            Debug.Log("ìê¸° ìì‹ ì˜ ëª¸ì²´ì™€ ì¶©ëŒ ë¬´ì‹œ");
             return;
         }
 
-        // ¹æ¾î »óÅÂ È®ÀÎ
+        //  [ì¤‘ìš”!] ê³µê²©ìê°€ ê³µê²© ì¤‘ì¸ì§€ ì²´í¬
+        RootMotionMover myRootMotion = owner.GetComponent<RootMotionMover>();
+        if (myRootMotion != null && !myRootMotion.isAttacking)
+        {
+            Debug.Log($"{owner.name}ê°€ ê³µê²© ì¤‘ì´ ì•„ë‹˜! ë°ë¯¸ì§€ ë¬´ì‹œ");
+            return;
+        }
+
+        // ìƒëŒ€ë°©ì˜ ë°©ì–´ ì—¬ë¶€ë§Œ í™•ì¸
         RootMotionMover rootMotion = other.GetComponentInParent<RootMotionMover>();
         if (rootMotion != null)
         {
             bool isDefending = rootMotion.animator.GetBool("isDefending");
-            Debug.Log($"{other.name}ÀÇ ¹æ¾î »óÅÂ: {isDefending}");
+            Debug.Log($"{other.name}ì˜ ë°©ì–´ ìƒíƒœ: {isDefending}");
 
             if (isDefending)
             {
-                Debug.Log($"{other.name}°¡ ¹æ¾î Áß! µ¥¹ÌÁö ¹«½Ã.");
-                return; // ¹æ¾î ÁßÀÌ¸é µ¥¹ÌÁö ¾È ÁÜ
+                Debug.Log($"{other.name}ê°€ ë°©ì–´ ì¤‘! ë°ë¯¸ì§€ ë¬´ì‹œ.");
+                return;
             }
         }
 
-        // Body¿¡ ´ê¾Ò´ÂÁö Ã¼Å© (¹æ¾î ÁßÀÌ ¾Æ´Ñ °æ¿ì¸¸!)
+        // ë°ë¯¸ì§€ ì£¼ê¸°
         IDamageable target = other.GetComponent<IDamageable>();
         if (target != null)
         {
-            Debug.Log($"{owner.name}ÀÇ °ËÀÌ {other.name}¿¡°Ô µ¥¹ÌÁö!");
+            Debug.Log($"{owner.name}ì˜ ê²€ì´ {other.name}ì—ê²Œ ë°ë¯¸ì§€!");
             target.TakeDamage(damage);
         }
     }
