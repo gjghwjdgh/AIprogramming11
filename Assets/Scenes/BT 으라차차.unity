@@ -1978,6 +1978,10 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
+      propertyPath: defendEndedStateName
+      value: "\uBC29\uC5B4\uC885\uB8CC"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: opponentIdleStateName
       value: Movement
       objectReference: {fileID: 0}

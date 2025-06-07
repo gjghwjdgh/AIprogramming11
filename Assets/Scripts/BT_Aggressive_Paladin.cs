@@ -30,9 +30,10 @@ public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
     public string normalAttackStateName = "Attack_Normal";
     public string criticalAttackStateName = "Attack_Critical";
     public string defendStateName = "Defend";
+    public string defendEndedStateName = "Defend_Ended"; // 적이 방어를 마치거나 공격 후 돌아오는 일반적인 유휴 상태
     public string opponentIdleStateName = "Idle_Battle";
-    public string[] postAttackLagStateNames = { "Idle_Battle" };
-    public string[] wideOpenStateNames = { "Stunned" };
+    public string[] postAttackLagStateNames = { "Idle_Battle" }; 
+    public string[] wideOpenStateNames = { "Stunned" }; 
     // IPaladinParameters 구현부는 그대로 둡니다.
     float IPaladinParameters.optimalCombatDistanceMin { get { return this.optimalCombatDistanceMin; } }
     float IPaladinParameters.optimalCombatDistanceMax { get { return this.optimalCombatDistanceMax; } }
@@ -62,7 +63,9 @@ public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
             // --- 우선 순위 2: 기회 포착 ---
             new Sequence(new List<Node>
             {
-                new IsEnemyWideOpenNode(targetAnimator, wideOpenStateNames),
+                // 적의 애니메이터가 '방어 종료 후' 상태임을 감지
+                // 'defendEndedStateName'을 사용하거나, 적절한 '방어 종료 후' 상태 이름을 직접 전달합니다.
+                new IsEnemyDefendEndedNode(targetAnimator, defendEndedStateName), // 이곳에 정확한 방어 종료 후 애니메이션 상태 이름 지정
                 new IsEnemyInDistanceNode(transform, target, spinAttackRange),
                 new IsCooldownCompleteNode(transform, "SpinAttack"),
                 new ActionLoggerNode(this, "필살기(스핀 공격)", new SpinAttackNode(transform))
