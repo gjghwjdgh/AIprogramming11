@@ -606,12 +606,40 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 220053314}
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: engageDistance
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: targetAnimator
       value: 
       objectReference: {fileID: 220053313}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: kickAttackRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: spinAttackRange
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: basicAttackRange
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: feintStepDistance
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: <idleStateName>k__BackingField
+      value: Movement
+      objectReference: {fileID: 0}
+    - target: {fileID: 2426927763979715621, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8583390855924699724, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -212.87
+      value: -218.29
       objectReference: {fileID: 0}
     - target: {fileID: 8583390855924699724, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -619,7 +647,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8583390855924699724, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.191
+      value: 11.38
       objectReference: {fileID: 0}
     - target: {fileID: 8583390855924699724, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -649,6 +677,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8732232786499260726, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0063018aab618954d873b98a6c91325d, type: 2}
     - target: {fileID: 8863523281694050311, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 1
@@ -1381,7 +1413,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1234374823207065289, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -206.33
+      value: -213.84
       objectReference: {fileID: 0}
     - target: {fileID: 1234374823207065289, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1389,7 +1421,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1234374823207065289, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 15.35
+      value: 10.87
       objectReference: {fileID: 0}
     - target: {fileID: 1234374823207065289, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1423,6 +1455,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GongBT
       objectReference: {fileID: 0}
+    - target: {fileID: 2238335920544011699, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b6b164a369e35a4438901bbc6041c2a8, type: 2}
     - target: {fileID: 4561918846179043438, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 1
@@ -1432,9 +1468,37 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1013006092}
     - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
+      propertyPath: engageDistance
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: targetAnimator
       value: 
       objectReference: {fileID: 1013006091}
+    - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
+      propertyPath: kickAttackRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
+      propertyPath: basicAttackRange
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
+      propertyPath: debugLogInterval
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
+      propertyPath: opponentIdleStateName
+      value: Movement
+      objectReference: {fileID: 0}
+    - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
+      propertyPath: optimalCombatDistanceMax
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8325381025780907194, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

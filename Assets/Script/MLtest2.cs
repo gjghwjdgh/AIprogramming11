@@ -33,7 +33,7 @@ public class MLtest2 : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
 
-        Debug.Log("타겟의 휴리스틱이 계속 호출되고 있니?");
+        // Debug.Log("타겟의 휴리스틱이 계속 호출되고 있니?");
         var discreteActions = actionsOut.DiscreteActions;
         discreteActions[0] = 0;
 
