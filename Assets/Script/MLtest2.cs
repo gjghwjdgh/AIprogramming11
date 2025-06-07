@@ -39,9 +39,9 @@ public class MLtest2 : Agent
 
         if (Input.GetKey(KeyCode.I))
             discreteActions[0] = 1; // Move Forward
-        else if (Input.GetKey(KeyCode.J))
-            discreteActions[0] = 2; // Move Backward
         else if (Input.GetKey(KeyCode.K))
+            discreteActions[0] = 2; // Move Backward
+        else if (Input.GetKey(KeyCode.J))
             discreteActions[0] = 3; // Dodge
         else if (Input.GetKey(KeyCode.U))
             discreteActions[0] = 4; // Q_Attack
@@ -84,7 +84,7 @@ public class MLtest2 : Agent
     {
 
         agentHealth = 100f;
-        targetHealth = 100f; 
+        targetHealth = 100f;
 
         // 중력 작용 직전에 정확히 바닥 위로 보정
         Vector3 startPosition = new Vector3(-214.36f, 0.0f, 5.0f);
@@ -170,43 +170,47 @@ public class MLtest2 : Agent
     {
         int discreteAction = actionBuffers.DiscreteActions[0];
 
-        // 기본적으로 항상 방어자세 해제
-        rootMotionMover.SetDefend(false);
+        // 기본적으로 항상 방어 해제
+        //bool isDefending = false;
+        //// 기본적으로 항상 방어자세 해제
+        //rootMotionMover.SetDefend(false);
 
         // RootMotionMover의 animator의 v값 초기화
         rootMotionMover.animator.SetFloat("v", 0.0f); // Idle 기본값
 
         switch (discreteAction)
         {
-            case 0: // Idle
-                AddReward(-0.01f); // 가만히 있으면 작은 패널티
+            case 0:
+                AddReward(-0.01f);
                 break;
-            case 1: // Move Forward
-                rootMotionMover.animator.SetFloat("v", 1.0f); // 전진 애니메이션 트리거
+            case 1:
+                rootMotionMover.animator.SetFloat("v", 1.0f);
                 AddReward(0.01f);
                 break;
-            case 2: // Move Backward
-                rootMotionMover.animator.SetFloat("v", -1.0f); // 후진 애니메이션 트리거
+            case 2:
+                rootMotionMover.animator.SetFloat("v", -2.0f);
                 AddReward(0.01f);
                 break;
-            case 3: // Dodge
-                if (!rootMotionMover.isDodgging)  // dodge 중이 아닐 때만 실행
-                    rootMotionMover.Dodge();
-                break; 
-
-            case 4: // Q_Attack
+            case 3:
+                rootMotionMover.Dodge();
+                break;
+            case 4:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.Q_Attack);
                 break;
-            case 5: // E_Kick
+            case 5:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.E_Kick);
                 break;
-            case 6: // R_Attack
+            case 6:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.R_Attack);
                 break;
-            case 7: // Defend
-                rootMotionMover.SetDefend(true);
+            case 7:
+                bool isDefending = Input.GetKey(KeyCode.RightShift); // 입력 체크!
+                rootMotionMover.SetDefend(isDefending); // 입력 상태 그대로 방어 상태에 반영
+                Debug.Log("방어 상태: " + isDefending);
                 break;
         }
+        // Defend 상태 최종 반영 (한 프레임만 true로 끝나지 않도록!)
+        //rootMotionMover.SetDefend(isDefending);
 
         // Agent나 Target이 죽으면 에피소드 종료
         if (targetHealth <= 0f)
@@ -221,6 +225,7 @@ public class MLtest2 : Agent
             EndEpisode();
         }
     }
+
 
 
     //public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -295,9 +300,10 @@ public class MLtest2 : Agent
         AddReward(0.2f + damageDefault * 0.01f);
     }
 
-
-
-
-
-
 }
+
+
+
+
+
+
