@@ -14,6 +14,8 @@ public class Character : MonoBehaviour, IDamageable
         health = Mathf.Clamp(health, 0, maxHealth);
         Debug.Log($"{gameObject.name}가 {damage}의 데미지를 입음. 남은 체력: {health}");
 
+        Debug.Log($"=== side 확인: {side} ===");  // 이거 추가!!
+
         // UI 갱신
         if (side == Side.Left)
             TestUIController.Instance.SetLeftHealth(health, maxHealth);

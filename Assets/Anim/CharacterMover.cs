@@ -3,10 +3,11 @@ using System.Collections;
 
 public class RootMotionMover : MonoBehaviour
 {
-    private Animator animator;
-    private Rigidbody rb; // Rigidbody 변수 추가
-
+    public Animator animator;
     public TrailRenderer swordTrail;
+
+    public bool isDodgging = false;
+    public bool isDefending = false;
 
     public enum AttackType { Q_Attack = 0, E_Kick = 1, R_Attack = 2 }
     private AttackType currentAttackType;
@@ -16,7 +17,7 @@ public class RootMotionMover : MonoBehaviour
     public float qAttackTrailDelay = 0.05f;
     public float rAttackTrailDelay = 0.1f;
 
-    private bool isAttacking = false;
+    public bool isAttacking = false;
 
     public SoundManager soundManager;
     public AudioClip qAttackSfx;
@@ -25,16 +26,19 @@ public class RootMotionMover : MonoBehaviour
     public AudioClip wKeySfx;
     public AudioClip sKeySfx;
 
+    private Rigidbody rBody;
+
+
+
+
     void Start()
     {
         animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
+        rBody = GetComponent<Rigidbody>();
         animator.applyRootMotion = true;
 
-        if (rb != null)
-        {
-            rb.isKinematic = false; // 코드를 통해 isKinematic을 false로 설정
-        }
+
+
 
         if (swordTrail != null)
             swordTrail.enabled = false;
@@ -45,63 +49,56 @@ public class RootMotionMover : MonoBehaviour
         }
     }
 
-    void Update()
+    //void Update()
+    //{
+        //float v = 0.0f;
+
+        //if (!isAttacking)
+        //{
+        //    if (Input.GetKey(KeyCode.W)) v = 1.0f;
+        //    else if (Input.GetKey(KeyCode.S)) v = -1.0f;
+        //}
+
+        //animator.SetFloat("v", v);
+
+        //if (soundManager != null)
+        //{
+        //    bool shouldPlayWalkingSound = !isAttacking && Input.GetKey(KeyCode.W) && v > 0;
+
+        //    if (shouldPlayWalkingSound && wKeySfx != null)
+        //    {
+        //        soundManager.PlayWalkingSound(wKeySfx);
+        //    }
+        //    else
+        //    {
+        //        soundManager.StopWalkingSound();
+        //    }
+
+        //    if (!isAttacking && Input.GetKeyDown(KeyCode.S) && sKeySfx != null)
+        //    {
+        //        soundManager.PlaySoundEffect(sKeySfx);
+        //    }
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.Q) && !isAttacking)
+        //{
+        //    StartAttack(AttackType.Q_Attack, qAttackTrailDuration, qAttackTrailDelay);
+        //}
+        //if (Input.GetKeyDown(KeyCode.E) && !isAttacking)
+        //{
+        //    StartAttack(AttackType.E_Kick);
+        //}
+        //if (Input.GetKeyDown(KeyCode.R) && !isAttacking)
+        //{
+        //    StartAttack(AttackType.R_Attack, rAttackTrailDuration, rAttackTrailDelay);
+        //}
+    //}
+
+    public void StartAttack(AttackType attackType, float trailDuration = 0f, float trailDelay = 0f)
     {
-        float v = 0.0f;
 
-        if (!isAttacking)
-        {
-            if (Input.GetKey(KeyCode.W)) v = 1.0f;
-            else if (Input.GetKey(KeyCode.S)) v = -1.0f;
-        }
+        if (isAttacking) return;
 
-        animator.SetFloat("v", v);
-
-        if (soundManager != null)
-        {
-            bool shouldPlayWalkingSound = !isAttacking && Input.GetKey(KeyCode.W) && v > 0;
-
-            if (shouldPlayWalkingSound && wKeySfx != null)
-            {
-                soundManager.PlayWalkingSound(wKeySfx);
-            }
-            else
-            {
-                soundManager.StopWalkingSound();
-            }
-
-            if (!isAttacking && Input.GetKeyDown(KeyCode.S) && sKeySfx != null)
-            {
-                soundManager.PlaySoundEffect(sKeySfx);
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q) && !isAttacking)
-        {
-            StartAttack(AttackType.Q_Attack, qAttackTrailDuration, qAttackTrailDelay);
-        }
-        if (Input.GetKeyDown(KeyCode.E) && !isAttacking)
-        {
-            StartAttack(AttackType.E_Kick);
-        }
-        if (Input.GetKeyDown(KeyCode.R) && !isAttacking)
-        {
-            StartAttack(AttackType.R_Attack, rAttackTrailDuration, rAttackTrailDelay);
-        }
-        
-        // 방어 모션 처리 (Update로 이동)
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            animator.SetBool("isDefending", true);
-        }
-        else
-        {
-            animator.SetBool("isDefending", false);
-        }
-    }
-
-    void StartAttack(AttackType attackType, float trailDuration = 0f, float trailDelay = 0f)
-    {
         isAttacking = true;
         currentAttackType = attackType;
 
@@ -151,14 +148,14 @@ public class RootMotionMover : MonoBehaviour
         yield return new WaitForSeconds(animationLength);
         isAttacking = false;
 
+        // R 공격 끝났을 때 위치 보정
         if (currentAttackType == AttackType.R_Attack)
         {
-            Vector3 fixedPos = rb.position; // transform.position 대신 rb.position 사용
+            Vector3 fixedPos = transform.position;
             fixedPos.y = 0.0f;
-            rb.MovePosition(fixedPos); // transform.position = 대신 rb.MovePosition 사용
+            transform.position = fixedPos;
         }
     }
-
 
     float GetAnimationLength(AttackType attackType)
     {
@@ -177,23 +174,79 @@ public class RootMotionMover : MonoBehaviour
 
     void OnAnimatorMove()
     {
-        if (rb == null) return; // Rigidbody가 없으면 실행하지 않음
 
-        // 이동 처리: Rigidbody의 MovePosition 사용
-        Vector3 newPosition = rb.position + animator.deltaPosition;
-        rb.MovePosition(newPosition);
+        if(animator && rBody)
+        {
+            Vector3 deltaPos = animator.deltaPosition;
+            deltaPos.y = 0.0f; // Y 이동은 막기 (바닥 뚫림 방지)
+            transform.position += deltaPos;
+            transform.rotation *= animator.deltaRotation;
 
-        // 회전 처리: Rigidbody의 MoveRotation 사용
-        Quaternion newRotation = rb.rotation * animator.deltaRotation;
-        rb.MoveRotation(newRotation);
+            //Vector3 newPos = rBody.position + deltaPos;
+            //newPos.y = 0f; // 최종 위치 Y를 강제로 지면으로 고정!
 
-        // R 공격 시 Y축 보정 로직은 더 이상 필요 없을 수 있으나,
-        // 애니메이션 자체에 문제가 있다면 ResetAttackStateAfterAnimation 코루틴에서 처리하는 것이 좋습니다.
-        // OnAnimatorMove에서는 물리 업데이트에만 집중하도록 합니다.
+            //rBody.MovePosition(newPos);
+            //rBody.MoveRotation(transform.rotation * animator.deltaRotation);
+        }
+
+        //// Rigidbody로 Physics 이동 처리
+        //rBody.MovePosition(transform.position + deltaPos);
+        //rBody.MoveRotation(transform.rotation * animator.deltaRotation);
+
+        //if (currentattacktype == attacktype.r_attack && isattacking)
+        //{
+        //    transform.position += animator.deltaposition;
+        //}
+        //else
+        //{
+        //    vector3 deltapos = animator.deltaposition;
+        //    deltapos.y = 0.0f;
+        //    transform.position += deltapos;
+        //}
+
+        //transform.rotation *= animator.deltarotation;
+
+        ////// 방어 모션 처리 (선택적)
+        ////if (input.getkey(keycode.leftshift))
+        ////{
+        ////    animator.setbool("isdefending", true);
+        ////}
+        ////else
+        ////{
+        ////    animator.setbool("isdefending", false);
+        ////}
     }
+
+
+
+
+    public void SetDefend(bool isDefending)
+    {
+        
+        animator.SetBool("isDefending", isDefending);
+        Debug.Log("SetDefend 호출됨: " + isDefending);  // 상태 확인
+    }
+
+    public void Dodge()
+    {
+        if (isDodgging) return;  // 중복 방지
+
+        animator.SetTrigger("dodgeTrigger");
+        isDodgging = true;
+    }
+
+    // 애니메이션 이벤트로 끝났을 때 호출
+    public void AnimationFinished_Dodge()
+    {
+        isDodgging = false;
+    }
+
+
 
     public void AnimationFinished_SetAttackingFalse()
     {
         isAttacking = false;
     }
+
+
 }
