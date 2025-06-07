@@ -95,7 +95,7 @@ public class BT_Paladin : MonoBehaviour
                     {
                         new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "KickAttack"), new KickAttackNode(transform) }),
                         new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "Evade"), new EvadeNode(transform, "Backward") }),
-                        new MoveAwayNode(transform, target)
+                        new MoveAwayNode(transform, target) // 뒤로 물러나기
                     })
                 }),
 
@@ -113,7 +113,7 @@ public class BT_Paladin : MonoBehaviour
                 new Sequence(new List<Node>
                 {
                     new IsNotInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax), // 최적 교전 범위를 벗어났을 때
-                    new MaintainDistanceNode(transform, target, (optimalCombatDistanceMin + optimalCombatDistanceMax) / 2f) // 중간값으로 거리 유지 시도
+                    new MaintainDistanceNode(transform, target, (optimalCombatDistanceMin + optimalCombatDistanceMax) / 2f, 0.1f) // 중간값으로 거리 유지 시도
                 })
             }),
 

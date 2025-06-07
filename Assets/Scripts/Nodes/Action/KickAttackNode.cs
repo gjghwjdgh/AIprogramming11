@@ -22,6 +22,7 @@ public class KickAttackNode : Node
         }
 
         actuator.StartAttack(PaladinActuator.AttackType.E_Kick);
+        actuator.OnActionStart(); // 행동 시작 알림
         cooldownManager.StartCooldown(skillName, cooldownDuration);
 
         return NodeState.SUCCESS;

@@ -9,43 +9,31 @@ public class MaintainDistanceNode : Node
     private float idealDistance;
     private float tolerance;
 
-    public MaintainDistanceNode(Transform agentTransform, Transform target, float idealDistance, float tolerance = 0.5f)
+    public MaintainDistanceNode(Transform agent, Transform target, float idealDist, float tol)
     {
-        this.agentTransform = agentTransform;
+        this.agentTransform = agent;
         this.targetTransform = target;
-        this.actuator = agentTransform.GetComponent<PaladinActuator>();
-        this.idealDistance = idealDistance;
-        this.tolerance = tolerance;
+        this.actuator = agent.GetComponent<PaladinActuator>();
+        this.idealDistance = idealDist;
+        this.tolerance = tol;
     }
 
     public override NodeState Evaluate()
     {
-        if (targetTransform == null)
-        {
-            actuator.SetMovement(0);
-            return NodeState.FAILURE;
-        }
+        if (targetTransform == null || actuator == null) return NodeState.FAILURE;
 
-        float currentDistance = Vector3.Distance(agentTransform.position, targetTransform.position);
-        
-        Vector3 directionToTarget = targetTransform.position - agentTransform.position;
-        directionToTarget.y = 0;
-        actuator.SetRotation(Quaternion.LookRotation(directionToTarget));
+        float distance = Vector3.Distance(agentTransform.position, targetTransform.position);
 
-        if (currentDistance > idealDistance + tolerance)
-        {
-            actuator.SetMovement(1.0f);
-            return NodeState.RUNNING;
-        }
-        else if (currentDistance < idealDistance - tolerance)
-        {
-            actuator.SetMovement(-1.0f);
-            return NodeState.RUNNING;
-        }
-        else
+        if (Mathf.Abs(distance - idealDistance) <= tolerance)
         {
             actuator.SetMovement(0);
             return NodeState.SUCCESS;
+        }
+        else
+        {
+            actuator.SetRotation(Quaternion.LookRotation(targetTransform.position - agentTransform.position));
+            actuator.SetMovement(distance > idealDistance ? 1f : -1f);
+            return NodeState.RUNNING; // "목표를 향해 아직 이동 중이다!"
         }
     }
 }

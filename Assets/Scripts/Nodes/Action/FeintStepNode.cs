@@ -19,6 +19,7 @@ public class FeintStepNode : Node
     public override NodeState Evaluate()
     {
         actuator.FeintStep(direction);
+        actuator.OnActionStart(); // 행동 시작 알림
         cooldownManager.StartCooldown(skillName, cooldownDuration);
         return NodeState.SUCCESS;
     }

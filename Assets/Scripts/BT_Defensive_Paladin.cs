@@ -96,7 +96,7 @@ public class BT_Defensive_Paladin : MonoBehaviour, IPaladinParameters
                     {
                         new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "KickAttack"), new KickAttackNode(transform) }),
                         new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "Evade"), new EvadeNode(transform, "Backward") }),
-                        new MoveAwayNode(transform, target)
+                        new MoveAwayNode(transform, target) // 뒤로 물러나기
                     })
                 })
             }),

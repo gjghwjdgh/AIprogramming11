@@ -22,6 +22,7 @@ public class BasicAttackNode : Node
         }
 
         actuator.StartAttack(PaladinActuator.AttackType.Q_Attack);
+        actuator.OnActionStart(); // 행동 시작 알림
         cooldownManager.StartCooldown(skillName, cooldownDuration);
 
         return NodeState.SUCCESS;
