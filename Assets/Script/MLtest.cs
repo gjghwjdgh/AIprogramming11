@@ -3,58 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
-
 using Unity.MLAgents.Sensors;
-
-
-
 
 public class MLtest : Agent
 {
-
-    public GameObject sword; // Inspector에서 드래그&드롭으로 할당
-
-
+    public GameObject sword;
     public RootMotionMover rootMotionMover;
+    public Transform Target;
 
     public float agentHealth = 100f;
     public float targetHealth = 100f;
+    public float forceMultiplier = 10;
 
+    private Rigidbody rBody;
+    private Vector3 lastSwordVelocity;
+    private Vector3 lastSwordPosition;
 
-    Rigidbody rBody;
-
-    //public override void Heuristic(in ActionBuffers actionsOut)
-    //{
-    //    var continuousActions = actionsOut.ContinuousActions;
-    //    continuousActions[0] = Input.GetAxis("Horizontal"); // 예: 키보드 좌우 입력
-    //    continuousActions[1] = Input.GetAxis("Vertical");   // 예: 키보드 전후 입력
-    //}
-    public override void Heuristic(in ActionBuffers actionsOut)
-    {
-        var discreteActions = actionsOut.DiscreteActions;
-        discreteActions[0] = 0;
-
-        if (Input.GetKey(KeyCode.W))
-            discreteActions[0] = 1; // Move Forward
-        else if (Input.GetKey(KeyCode.S))
-            discreteActions[0] = 2; // Move Backward
-        else if (Input.GetKey(KeyCode.Space))
-            discreteActions[0] = 3; // Dodge
-        else if (Input.GetKey(KeyCode.Q))
-            discreteActions[0] = 4; // Q_Attack
-        else if (Input.GetKey(KeyCode.E))
-            discreteActions[0] = 5; // E_Kick
-        else if (Input.GetKey(KeyCode.R))
-            discreteActions[0] = 6; // R_Attack
-        else if (Input.GetKey(KeyCode.LeftShift))
-            discreteActions[0] = 7; // Defend
-    }
-
-
-
-    Vector3 lastSwordVelocity;
-    Vector3 lastSwordPosition;
-    Vector3 swordAcceleration;
+    private bool isDefending = false;
+    private int stepCount = 0;
+    public int maxStepLimit = 1000;
 
     void Start()
     {
@@ -62,7 +29,6 @@ public class MLtest : Agent
         lastSwordPosition = sword.transform.position;
         lastSwordVelocity = Vector3.zero;
 
-        // Sword에 소유자 등록
         Sword swordScript = sword.GetComponent<Sword>();
         if (swordScript != null)
         {
@@ -74,210 +40,130 @@ public class MLtest : Agent
                 Physics.IgnoreCollision(swordCollider, bodyCollider);
             }
         }
-
     }
-    public Transform Target;
 
     public override void OnEpisodeBegin()
     {
-
         agentHealth = 100f;
         targetHealth = 100f;
+        stepCount = 0;
 
-        // 중력 작용 직전에 정확히 바닥 위로 보정
-        Vector3 startPosition = new Vector3(-217.8f, 0.0f, 5.0f); 
-        this.transform.localPosition = startPosition;
+        transform.localPosition = new Vector3(Random.Range(-220f, -215f), 0.0f, Random.Range(3f, 7f));
+        Target.localPosition = new Vector3(Random.Range(-215f, -210f), 0.0f, Random.Range(3f, 7f));
 
-        //this.rBody.linearVelocity = Vector3.zero;
-        //this.rBody.angularVelocity = Vector3.zero;
+        rBody.linearVelocity = Vector3.zero;
+        rBody.angularVelocity = Vector3.zero;
 
-        Target.localPosition = new Vector3(-214.36f, 0.0f, 5.0f);
+        lastSwordPosition = sword.transform.position;
+        lastSwordVelocity = Vector3.zero;
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(Target.localPosition);
-        sensor.AddObservation(this.transform.localPosition);
+        Vector3 relativePosition = Target.localPosition - transform.localPosition;
 
-        //칼의 현재 위치, 속도 계산
+        sensor.AddObservation(relativePosition);
+        sensor.AddObservation(transform.localPosition);
+        sensor.AddObservation(Target.localPosition);
+
+        sensor.AddObservation(rBody.linearVelocity);
+
+        Rigidbody targetBody = Target.GetComponent<Rigidbody>();
+        if (targetBody != null)
+        {
+            sensor.AddObservation(targetBody.linearVelocity);
+        }
+
         Vector3 currentPos = sword.transform.position;
         Vector3 currentVelocity = (currentPos - lastSwordPosition) / Time.fixedDeltaTime;
-
-        //칼의 가속도 계산: 현재 속도 - 이전 속도  / 시간변화량
         Vector3 swordAcceleration = (currentVelocity - lastSwordVelocity) / Time.fixedDeltaTime;
-        
-        
 
-        //관찰값으로 추가
         sensor.AddObservation(swordAcceleration.x);
         sensor.AddObservation(swordAcceleration.z);
 
-        //다음 프레임 계산을 위해 저장
         lastSwordPosition = currentPos;
         lastSwordVelocity = currentVelocity;
-
-        //다른 관찰값도 여기 추가하면 됨.
-
-
     }
-
-
-        // ... 기존 변수 및 메서드 ...
-
-        public void OnDefendSuccess(float attackAccel)
-        {
-            float baseReward = 0.05f;
-
-            if (attackAccel >= 5f)
-            {
-                float scaledReward = baseReward * (attackAccel / 5f);
-                AddReward(scaledReward);
-                Debug.Log($"방어 성공! 공격 가속도: {attackAccel}, 보상: {scaledReward}");
-            }
-            else
-            {
-                AddReward(baseReward);
-                Debug.Log($"방어 성공! 기본 보상만 지급: {baseReward}");
-            }
-        }
-
-    public void OnDodgeSuccess(float attackAccel)
-    {
-        float baseReward = 0.05f;
-
-        if (attackAccel >= 5f)
-        {
-            float scaledReward = baseReward * (attackAccel / 5f);
-            AddReward(scaledReward);
-            Debug.Log($"회피 성공! 공격 가속도: {attackAccel}, 보상: {scaledReward}");
-        }
-        else
-        {
-            AddReward(baseReward);
-            Debug.Log($"회피 성공! 기본 보상만 지급: {baseReward}");
-        }
-    }
-
-
-
-    public float forceMultiplier = 10;
-
-
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        int discreteAction = actionBuffers.DiscreteActions[0];
+        stepCount++;
 
-        // 기본적으로 항상 방어 해제
-        //bool isDefending = false;
-        //// 기본적으로 항상 방어자세 해제
-        //rootMotionMover.SetDefend(false);
+        int action = actionBuffers.DiscreteActions[0];
+        rootMotionMover.animator.SetFloat("v", 0.0f);
 
-        // RootMotionMover의 animator의 v값 초기화
-        rootMotionMover.animator.SetFloat("v", 0.0f); // Idle 기본값
+        float distanceToTarget = Vector3.Distance(transform.localPosition, Target.localPosition);
+        float distanceReward = 0.01f * (1.0f - Mathf.Clamp01(distanceToTarget / 10f));
+        AddReward(distanceReward);
 
-        switch (discreteAction)
+        // 디버그용 행동명 변수
+        string actionName = "Idle";
+
+        switch (action)
         {
             case 0:
                 AddReward(-0.01f);
+                actionName = "Idle";
                 break;
             case 1:
                 rootMotionMover.animator.SetFloat("v", 1.0f);
                 AddReward(0.01f);
+                actionName = "Move Forward";
                 break;
             case 2:
                 rootMotionMover.animator.SetFloat("v", -2.0f);
                 AddReward(0.01f);
+                actionName = "Move Backward";
                 break;
             case 3:
                 rootMotionMover.Dodge();
+                actionName = "Dodge";
                 break;
             case 4:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.Q_Attack);
+                AddReward(-0.005f);
+                actionName = "Q_Attack";
                 break;
             case 5:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.E_Kick);
+                AddReward(-0.005f);
+                actionName = "E_Kick";
                 break;
             case 6:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.R_Attack);
+                AddReward(-0.005f);
+                actionName = "R_Attack";
                 break;
             case 7:
-                bool isDefending = Input.GetKey(KeyCode.LeftShift); // 입력 체크!
-                rootMotionMover.SetDefend(isDefending); // 입력 상태 그대로 방어 상태에 반영
-                Debug.Log("방어 상태: " + isDefending);
+                isDefending = true;
+                actionName = "Defend";
                 break;
         }
-        // Defend 상태 최종 반영 (한 프레임만 true로 끝나지 않도록!)
-        //rootMotionMover.SetDefend(isDefending);
 
-        // Agent나 Target이 죽으면 에피소드 종료
+        rootMotionMover.SetDefend(isDefending);
+
+        // 디버그 출력
+        Debug.Log($"[Step {stepCount}] Action: {actionName} | AgentHP: {agentHealth} | TargetHP: {targetHealth} | Distance: {distanceToTarget:F2}");
+
         if (targetHealth <= 0f)
         {
-            float healthRatio = agentHealth / 100f;
-            SetReward(1.0f + healthRatio);
+            Debug.Log("[Episode End] 승리");
+            SetReward(1.0f + (agentHealth / 100f));
             EndEpisode();
         }
         else if (agentHealth <= 0f)
         {
+            Debug.Log("[Episode End] 패배");
             SetReward(-1.0f);
             EndEpisode();
         }
+        else if (stepCount >= maxStepLimit)
+        {
+            Debug.Log("[Episode End] 시간 초과");
+            AddReward(-0.5f);
+            EndEpisode();
+        }
     }
-
-
-    //public override void OnActionReceived(ActionBuffers actionBuffers)
-    //{
-    //    int discreteAction = actionBuffers.DiscreteActions[0];
-
-    //    // 기본적으로 v=0으로 초기화
-    //    rootMotionMover.animator.SetFloat("v", 0.0f);
-
-    //    switch (discreteAction)
-    //    {
-    //        case 0: // Idle
-    //            AddReward(-0.01f); // 가만히 있으면 작은 패널티
-    //            break;
-    //        case 1: // Move Forward
-    //            rBody.AddForce(transform.forward * forceMultiplier);
-    //            rootMotionMover.animator.SetFloat("v", 1.0f);
-    //            AddReward(0.01f); // 이동하면 소량 보상
-    //            break;
-    //        case 2: // Move Backward
-    //            rBody.AddForce(-transform.forward * forceMultiplier);
-    //            rootMotionMover.animator.SetFloat("v", -1.0f);
-    //            AddReward(0.01f);
-    //            break;
-    //        case 3: // Dodge
-    //            rootMotionMover.Dodge();
-    //            break;
-    //        case 4: // Q_Attack
-    //            rootMotionMover.StartAttack(RootMotionMover.AttackType.Q_Attack);
-    //            break;
-    //        case 5: // E_Kick
-    //            rootMotionMover.StartAttack(RootMotionMover.AttackType.E_Kick);
-    //            break;
-    //        case 6: // R_Attack
-    //            rootMotionMover.StartAttack(RootMotionMover.AttackType.R_Attack);
-    //            break;
-    //        case 7: // Defend
-    //            rootMotionMover.SetDefend(true);
-    //            break;
-    //    }
-
-    //    // Agent나 Target이 죽으면 에피소드 종료
-    //    if (targetHealth <= 0f)
-    //    {
-    //        float healthRatio = agentHealth / 100f;
-    //        SetReward(1.0f + healthRatio);
-    //        EndEpisode();
-    //    }
-    //    else if (agentHealth <= 0f)
-    //    {
-    //        SetReward(-1.0f);
-    //        EndEpisode();
-    //    }
-    //}
-
 
 
     public void TakeDamage(float damage)
@@ -290,16 +176,29 @@ public class MLtest : Agent
         }
     }
 
-
+    public void OnAttackSuccess(float damage)
+    {
+        float reward = 0.5f + damage * 0.05f;
+        AddReward(reward);
+        Debug.Log($"[공격 성공] 데미지: {damage}, 보상: {reward}");
+    }
 
     public void OnEffectiveCounterAttack(float damageDefault)
     {
         AddReward(0.2f + damageDefault * 0.01f);
     }
 
+    public void OnDefendSuccess(float attackAccel)
+    {
+        float reward = 0.1f + 0.04f * Mathf.Clamp((attackAccel - 1f), 0f, 10f);
+        AddReward(reward);
+        Debug.Log($"[방어 성공] 공격 가속도: {attackAccel}, 보상: {reward}");
+    }
 
-
-
-
-
+    public void OnDodgeSuccess(float attackAccel)
+    {
+        float reward = 0.1f + 0.04f * Mathf.Clamp((attackAccel - 1f), 0f, 10f);
+        AddReward(reward);
+        Debug.Log($"[회피 성공] 공격 가속도: {attackAccel}, 보상: {reward}");
+    }
 }
