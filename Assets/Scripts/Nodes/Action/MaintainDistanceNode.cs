@@ -33,7 +33,7 @@ public class MaintainDistanceNode : Node
         {
             actuator.SetMovement(0);
             actuator.SetRotation(Quaternion.LookRotation(targetTransform.position - agentTransform.position));
-            actuator.SetMovement(distance > idealDistance ? 1f : -1f);
+            actuator.SetMovement(distance > idealDistance ? 0.75f : -0.75f);
             return NodeState.SUCCESS;
         }
     }
