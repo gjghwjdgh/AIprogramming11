@@ -64,7 +64,6 @@ public class BT_Aggressive_Paladin : BT_Brain
             {
                 // 적의 애니메이터가 '방어 종료 후' 상태임을 감지
                 // 'defendEndedStateName'을 사용하거나, 적절한 '방어 종료 후' 상태 이름을 직접 전달합니다.
-                new IsEnemyDefendEndedNode(targetAnimator, defendEndedStateName), // 이곳에 정확한 방어 종료 후 애니메이션 상태 이름 지정
                 new IsEnemyInDistanceNode(transform, target, spinAttackRange),
                 new IsCooldownCompleteNode(transform, "SpinAttack"),
                 new ActionLoggerNode(this, "필살기(스핀 공격)", new SpinAttackNode(transform))

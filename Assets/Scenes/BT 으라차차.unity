@@ -574,16 +574,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1903529436905540723, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
   m_PrefabInstance: {fileID: 592555555}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &220053313 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 4561918846179043438, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
-  m_PrefabInstance: {fileID: 592555555}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &220053314 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1234374823207065289, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
-  m_PrefabInstance: {fileID: 592555555}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &220053315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -671,7 +661,7 @@ PrefabInstance:
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: target
       value: 
-      objectReference: {fileID: 220053314}
+      objectReference: {fileID: 1847199887}
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: engageDistance
       value: 50
@@ -679,7 +669,7 @@ PrefabInstance:
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: targetAnimator
       value: 
-      objectReference: {fileID: 220053313}
+      objectReference: {fileID: 871443464}
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: kickAttackRange
       value: 1
