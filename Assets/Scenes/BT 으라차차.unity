@@ -1948,7 +1948,7 @@ PrefabInstance:
     - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: target
       value: 
-      objectReference: {fileID: 1013006092}
+      objectReference: {fileID: 1847199887}
     - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1960,7 +1960,7 @@ PrefabInstance:
     - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: targetAnimator
       value: 
-      objectReference: {fileID: 1013006091}
+      objectReference: {fileID: 1847199892}
     - target: {fileID: 5422982437581331581, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: kickAttackRange
       value: 1
@@ -3185,16 +3185,6 @@ Transform:
 --- !u!1 &1013006087 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8959212363287496950, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
-  m_PrefabInstance: {fileID: 257961873}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1013006091 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 8863523281694050311, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
-  m_PrefabInstance: {fileID: 257961873}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1013006092 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8583390855924699724, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
   m_PrefabInstance: {fileID: 257961873}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1013006093
@@ -5752,6 +5742,11 @@ MonoBehaviour:
   m_UseChildActuators: 1
   m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
+--- !u!95 &1847199892 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+  m_PrefabInstance: {fileID: 871443463}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1942709809
 PrefabInstance:
   m_ObjectHideFlags: 0

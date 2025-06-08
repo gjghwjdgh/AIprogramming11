@@ -34,7 +34,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "\uACF5\uACA92"
+  m_Name: "\uD68C\uC804\uBCA0\uAE30"
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -185,7 +185,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "\uBE60\uB974\uAC8C \uC804\uC9C4"
+  m_Name: Movement
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -323,7 +323,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "\uACF5\uACA90"
+  m_Name: "\uACF5\uACA9"
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -570,7 +570,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "\uACF5\uACA91"
+  m_Name: "\uBC1C\uCC28\uAE30"
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
