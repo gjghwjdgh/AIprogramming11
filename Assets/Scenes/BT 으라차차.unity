@@ -220,6 +220,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1386461738}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1386461739}
     - targetCorrespondingSourceObject: {fileID: 1051571768989249988, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1212884007}
@@ -690,12 +693,20 @@ PrefabInstance:
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: tooCloseDistance
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: feintStepDistance
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: <idleStateName>k__BackingField
       value: Movement
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: <optimalCombatDistanceMax>k__BackingField
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2063352220180011565, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: m_Layer
@@ -961,6 +972,16 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 0063018aab618954d873b98a6c91325d, type: 2}
+    - target: {fileID: 8863523281694050311, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
+        'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:RightArm'\n\tTransform
+        'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tTransform 'mixamorig:RightFoot'\n\tTransform
+        'mixamorig:Head'\n\tTransform 'mixamorig:LeftUpLeg'\n\tand more ...\n\tFrom
+        animation clip 'mixamo.com'\n\tFrom animation clip 'mixamo.com'"
+      objectReference: {fileID: 0}
     - target: {fileID: 8863523281694050311, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 1
@@ -1392,6 +1413,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1508895966}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1508895969}
     - targetCorrespondingSourceObject: {fileID: 1051571768989249988, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 674388383}
@@ -2758,6 +2782,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1847199888}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 542a721634608c743a26148a047c6c6e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1847199892}
     - targetCorrespondingSourceObject: {fileID: 1051571768989249988, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 106905413}
@@ -4066,6 +4093,22 @@ MonoBehaviour:
   targetHealth: 100
   Target: {fileID: 1847199887}
   forceMultiplier: 10
+--- !u!114 &1386461739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386461730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88b6042bc9a5d4aa58d931eae49442e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
 --- !u!1 &1428162185
 GameObject:
   m_ObjectHideFlags: 0
@@ -4460,6 +4503,22 @@ MonoBehaviour:
   eKickSfx: {fileID: 8300000, guid: f1b02082996a15948b79b3120630cd72, type: 3}
   wKeySfx: {fileID: 8300000, guid: 3e1777a577a327f4fa7a264cea9887da, type: 3}
   sKeySfx: {fileID: 8300000, guid: 2190552460b3bcc4bb2ec7a769ed00d9, type: 3}
+--- !u!114 &1508895969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508895961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88b6042bc9a5d4aa58d931eae49442e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
 --- !u!1 &1586457628
 GameObject:
   m_ObjectHideFlags: 0
@@ -5747,6 +5806,22 @@ MonoBehaviour:
   m_UseChildActuators: 1
   m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
+--- !u!114 &1847199892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847199884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88b6042bc9a5d4aa58d931eae49442e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
 --- !u!1001 &1942709809
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -2,11 +2,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
+public class BT_Aggressive_Paladin : BT_Brain 
 {
-    // --- 기존의 모든 변수 선언은 그대로 둡니다 ---
-    [HideInInspector]
-    public string currentActionName = "None";
+    
     [Header("Debugging")]
     public bool enableDebugLog = true;
     public float debugLogInterval = 0.5f;
@@ -19,8 +17,8 @@ public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
     public float criticalHealthThreshold = 20f;
     public float lowHealthThreshold = 35f;
     public float engageDistance = 12f;
-    public float optimalCombatDistanceMin = 1.0f;
-    public float optimalCombatDistanceMax = 1.5f; // Inspector 스크린샷 값 반영
+    public float optimalCombatDistanceMin_Inspector = 1.0f;
+    public float optimalCombatDistanceMax_Inspector = 1.5f; // Inspector 스크린샷 값 반영
     public float tooCloseDistance = 0.8f;
     [Header("Attack Range Parameters")]
     public float basicAttackRange = 1.5f;     // Inspector 스크린샷 값 반영
@@ -35,9 +33,10 @@ public class BT_Aggressive_Paladin : MonoBehaviour, IPaladinParameters
     public string[] postAttackLagStateNames = { "Idle_Battle" }; 
     public string[] wideOpenStateNames = { "Stunned" }; 
     // IPaladinParameters 구현부는 그대로 둡니다.
-    float IPaladinParameters.optimalCombatDistanceMin { get { return this.optimalCombatDistanceMin; } }
-    float IPaladinParameters.optimalCombatDistanceMax { get { return this.optimalCombatDistanceMax; } }
-    string IPaladinParameters.idleStateName { get { return this.opponentIdleStateName; } }
+    public override float optimalCombatDistanceMin { get { return this.optimalCombatDistanceMin_Inspector; } }
+    public override float optimalCombatDistanceMax { get { return this.optimalCombatDistanceMax_Inspector; } }
+    public override string idleStateName { get { return this.opponentIdleStateName; } }
+
 
     private PaladinActuator actuator;
     private CooldownManager cooldownManager;
