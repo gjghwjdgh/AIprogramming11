@@ -18,22 +18,18 @@ public class Selector : Node
             switch (children[currentChildIndex].Evaluate())
             {
                 case NodeState.FAILURE:
-                    currentChildIndex = 0; // 하나라도 실패하면 처음부터 다시 평가하도록 리셋
-                    return NodeState.FAILURE;
+                    currentChildIndex++; // 실패하면 다음 자식으로
+                    return NodeState.RUNNING; // 아직 전체 Selector는 끝나지 않았으므로 RUNNING
                 case NodeState.SUCCESS:
-                    currentChildIndex++; // 성공하면 다음 자식으로 인덱스 이동
-                    if (currentChildIndex >= children.Count)
-                    {
-                        currentChildIndex = 0; // 시퀀스 전체 성공, 다음 평가를 위해 리셋
-                        return NodeState.SUCCESS;
-                    }
-                    return NodeState.RUNNING; // 아직 시퀀스가 진행 중이므로 RUNNING
+                    currentChildIndex = 0; // 성공했으면 처음부터 다시 평가하도록 리셋
+                    return NodeState.SUCCESS;
                 case NodeState.RUNNING:
-                    return NodeState.RUNNING;
+                    return NodeState.RUNNING; // 자식이 아직 실행 중이면 나도 실행 중
             }
         }
         
-        currentChildIndex = 0;
-        return NodeState.SUCCESS; // 이 부분은 거의 도달하지 못함
+        // 모든 자식을 다 확인했는데 성공을 못 찾았다면 실패
+        currentChildIndex = 0; // 다음 평가를 위해 리셋
+        return NodeState.FAILURE;
     }
 }
