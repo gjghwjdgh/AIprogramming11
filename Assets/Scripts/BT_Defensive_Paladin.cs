@@ -2,8 +2,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class BT_Defensive_Paladin : BT_Brain
+public class BT_Defensive_Paladin : BT_Brain 
 {
+    // --- 변수 선언부 ---
     [Header("Debugging")]
     public bool enableDebugLog = true;
     public float debugLogInterval = 0.5f;
@@ -17,12 +18,12 @@ public class BT_Defensive_Paladin : BT_Brain
 
     // --- AI 성향 파라미터: 수비형에 맞게 기본값 조정 ---
     [Header("AI Behavior Parameters")]
-    public float criticalHealthThreshold = 35f; // 더 높은 체력에서부터 치명타를 위협으로 간주
-    public float lowHealthThreshold = 50f;      // 체력 50% 이하부터 '낮다'고 판단
+    public float criticalHealthThreshold = 35f;
+    public float lowHealthThreshold = 50f;
     public float engageDistance = 10f;
-    public float optimalCombatDistanceMin_Inspector = 1.0f; // 이름 변경
-    public float optimalCombatDistanceMax_Inspector = 2.0f; // 이름 변경
-    public float tooCloseDistance = 1.5f;       // 더 넓은 개인 공간을 선호
+    public float optimalCombatDistanceMin_Inspector = 2.5f; // 더 먼 거리를 선호
+    public float optimalCombatDistanceMax_Inspector = 4.0f;
+    public float tooCloseDistance = 1.5f;
 
     [Header("Attack Range Parameters")]
     public float basicAttackRange = 2.0f;
@@ -30,18 +31,17 @@ public class BT_Defensive_Paladin : BT_Brain
     public float spinAttackRange = 2.5f;
 
     [Header("Opponent Animation State Names")]
-    public string normalAttackStateName = "Attack_Normal";
+    public string normalAttackStateName = "Attack_Normal"; // 실제 상대방 애니메이터에 맞게 수정 필요
     public string criticalAttackStateName = "Attack_Critical";
     public string defendStateName = "Defend";
     public string opponentIdleStateName = "Idle_Battle";
     public string[] postAttackLagStateNames = { "Idle_Battle" };
     public string[] wideOpenStateNames = { "Stunned" };
 
-    // IPaladinParameters 인터페이스 멤버 구현
+    // --- 부모 클래스(BT_Brain)의 추상 프로퍼티 구현 ---
     public override float optimalCombatDistanceMin { get { return this.optimalCombatDistanceMin_Inspector; } }
     public override float optimalCombatDistanceMax { get { return this.optimalCombatDistanceMax_Inspector; } }
     public override string idleStateName { get { return this.opponentIdleStateName; } }
-
 
     private PaladinActuator actuator;
     private CooldownManager cooldownManager;
@@ -51,86 +51,77 @@ public class BT_Defensive_Paladin : BT_Brain
         cooldownManager = GetComponent<CooldownManager>();
         actuator = GetComponent<PaladinActuator>();
     }
-    
-    // ####################################################################
-    // ### 수비형 AI의 새로운 생각의 흐름 (행동 트리) ###
-    // ####################################################################
+
     void Start()
     {
+        // 최상위 노드: 여러 행동 중 가장 우선순위 높은 것을 선택
         root = new Selector(new List<Node>
         {
-            // --- 최우선 순위 1: 생존 및 방어 ---
+            // --- 최우선 순위 1: 생존 본능 (죽음, 치명타 회피) ---
             new Selector(new List<Node>
             {
                 new Sequence(new List<Node> { new IsHealthLowNode(transform, 0f), new ActionLoggerNode(this, "사망", new DieNode(transform)) }),
-                new Sequence(new List<Node> { new IsEnemyCritAttackDetectedNode(targetAnimator, criticalAttackStateName), new IsCooldownCompleteNode(transform, "Evade"), new ActionLoggerNode(this, "치명타 회피", new EvadeNode(transform, "Backward")) }),
-                new Sequence(new List<Node> // 일반 공격은 최우선으로 방어
-                {
-                    new IsEnemyAttackImminentNode(targetAnimator, normalAttackStateName),
-                    new IsHealthHighEnoughToDefendNode(transform, lowHealthThreshold),
-                    new ActionLoggerNode(this, "방어", new DefendNode(transform))
-                })
-            }),
-
-            // --- 우선 순위 2: 위치 선정 (안전 거리 확보) ---
-            new Selector(new List<Node>
-            {
-                // 2-1. 너무 가까우면 최우선으로 뒤로 물러나기
+// 적의 치명타 공격이 감지되고, 회피 쿨타임이 아닐 때 -> 뒤로 회피
                 new Sequence(new List<Node>
                 {
-                    new IsEnemyInDistanceNode(transform, target, tooCloseDistance),
+                    new IsEnemyCritAttackDetectedNode(targetAnimator, criticalAttackStateName),
                     new IsCooldownCompleteNode(transform, "Evade"),
-                    new ActionLoggerNode(this, "너무 가까움! 후퇴", new EvadeNode(transform, "Backward"))
-                }),
-                // 2-2. 교전 거리 밖이면 -> 안전한 최적 거리로 이동
-                new Sequence(new List<Node>
-                {
-                    new IsNotInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
-                    new ActionLoggerNode(this, "안전 거리 유지", new MaintainDistanceNode(transform, target, (optimalCombatDistanceMin + optimalCombatDistanceMax) / 2f, 0.2f))
+                    new ActionLoggerNode(this, "치명타 회피", new EvadeNode(transform, "Backward")) // EvadeNode 사용
                 })
             }),
-
-            // --- 우선 순위 3: 반격 (수비형 AI의 주된 공격 수단) ---
-            new Selector(new List<Node>
-            {
-                // 3-1. 적의 큰 빈틈(스턴 등)에 대한 반격
-                new Sequence(new List<Node>
-                {
-                    new IsEnemyWideOpenNode(targetAnimator, wideOpenStateNames),
-                    new IsEnemyInDistanceNode(transform, target, spinAttackRange),
-                    new IsCooldownCompleteNode(transform, "SpinAttack"),
-                    new ActionLoggerNode(this, "반격(필살기)", new SpinAttackNode(transform))
-                }),
-                // 3-2. 방어 성공 직후의 반격
-                new Sequence(new List<Node>
-                {
-                    new DidDefendSucceedNode(transform), // '방금 방어에 성공했는가?' 조건 노드 필요
-                    new IsEnemyInPostAttackLagNode(targetAnimator, postAttackLagStateNames),
-                    new IsEnemyInDistanceNode(transform, target, kickAttackRange),
-                    new IsCooldownCompleteNode(transform, "KickAttack"),
-                    new ActionLoggerNode(this, "반격(발차기)", new KickAttackNode(transform))
-                })
-            }),
-
-            // --- 우선 순위 4: 제한적인 선제공격 (매우 안전할 때만) ---
+            
+            // --- 우선 순위 2: 일반 공격에 대한 2초 방어 ---
             new Sequence(new List<Node>
             {
-                new IsInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
-                new IsSafeToAttackNode(transform, targetAnimator, lowHealthThreshold),
-                new IsTargetNotAttackingOrDefendingNode(targetAnimator, normalAttackStateName, criticalAttackStateName, defendStateName),
-                new RandomChanceNode(0.2f), // 20%의 낮은 확률로만 선제공격 시도
-                new IsCooldownCompleteNode(transform, "BasicAttack"),
-                new ActionLoggerNode(this, "견제 공격", new BasicAttackNode(transform))
+                new IsEnemyAttackImminentNode(targetAnimator, normalAttackStateName),
+                new IsHealthHighEnoughToDefendNode(transform, lowHealthThreshold), // 방어에 충분한 체력인지 확인
+                new IsCooldownCompleteNode(transform, "Defend"),
+                new ActionLoggerNode(this, "2초 방어", new TimedDefendNode(transform, 2.0f))
             }),
 
-            // --- 최후 순위: 대기 (안전 거리에서 간 보기) ---
-            new ActionLoggerNode(this, "대기", new IdleNode(transform))
+            // --- 행동 잠금 확인: AI가 공격/회피 등 다른 행동 중일 때는 아래 로직을 실행하지 않음 ---
+            new Sequence(new List<Node>
+            {
+                new Inverter(new IsActionInProgressNode(actuator)),
+
+                // --- 우선 순위 3: 핵심 교전 로직 (방어 중이 아닐 때만 실행) ---
+                new Selector(new List<Node>
+                {
+                    // 3-1. 반격 (수비형 AI의 핵심 공격 수단)
+                    new Selector(new List<Node>
+                    {
+                        new Sequence(new List<Node> { new IsEnemyWideOpenNode(targetAnimator, wideOpenStateNames), new IsEnemyInDistanceNode(transform, target, spinAttackRange), new IsCooldownCompleteNode(transform, "SpinAttack"), new ActionLoggerNode(this, "반격(필살기)", new SpinAttackNode(transform)) }),
+                        new Sequence(new List<Node> { new DidDefendSucceedNode(transform), new IsEnemyInPostAttackLagNode(targetAnimator, postAttackLagStateNames), new IsEnemyInDistanceNode(transform, target, kickAttackRange), new IsCooldownCompleteNode(transform, "KickAttack"), new ActionLoggerNode(this, "반격(발차기)", new KickAttackNode(transform)) })
+                    }),
+                    
+                    // 3-2. 위치 선정
+                    new Selector(new List<Node>
+                    {
+                         new Sequence(new List<Node> { new IsEnemyInDistanceNode(transform, target, tooCloseDistance), new IsCooldownCompleteNode(transform, "Reposition"), new ActionLoggerNode(this, "전술적 후퇴", new MoveAwayNode(transform, target)) }),
+                         new Sequence(new List<Node> { new IsNotInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax), new ActionLoggerNode(this, "안전 거리 유지", new MaintainDistanceNode(transform, target, (optimalCombatDistanceMin + optimalCombatDistanceMax) / 2f, 0.2f)) })
+                    }),
+
+                    // 3-3. 제한적인 선제공격 (매우 안전하고 확률적으로만)
+                    new Sequence(new List<Node>
+                    {
+                        new IsInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
+                        new IsSafeToAttackNode(transform, targetAnimator, lowHealthThreshold),
+                        new RandomChanceNode(0.1f), // 10%의 낮은 확률로만 선제공격 시도
+                        new IsCooldownCompleteNode(transform, "BasicAttack"),
+                        new ActionLoggerNode(this, "견제 공격", new BasicAttackNode(transform))
+                    }),
+
+                    // 3-4. 최후의 수단: 대기
+                    new ActionLoggerNode(this, "대기", new IdleNode(transform))
+                })
+            })
         });
     }
 
+    // Update()와 PrintDebugStatus() 함수는 공격형 AI와 동일하게 유지
     void Update()
     {
-        if (root != null && actuator != null && !actuator.IsActionInProgress)
+        if (root != null)
         {
             root.Evaluate();
         }

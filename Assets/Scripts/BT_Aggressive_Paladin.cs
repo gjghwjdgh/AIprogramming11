@@ -56,7 +56,13 @@ public class BT_Aggressive_Paladin : BT_Brain
             new Selector(new List<Node>
             {
                 new Sequence(new List<Node> { new IsHealthLowNode(transform, 0f), new ActionLoggerNode(this, "사망", new DieNode(transform)) }),
-                new Sequence(new List<Node> { new IsEnemyCritAttackDetectedNode(targetAnimator, criticalAttackStateName), new IsCooldownCompleteNode(transform, "Evade"), new ActionLoggerNode(this, "치명타 회피", new EvadeNode(transform, "Backward")) })
+                // 적의 치명타 공격이 감지되고, 회피 쿨타임이 아닐 때 -> 뒤로 회피
+                new Sequence(new List<Node>
+                {
+                    new IsEnemyCritAttackDetectedNode(targetAnimator, criticalAttackStateName),
+                    new IsCooldownCompleteNode(transform, "Evade"),
+                    new ActionLoggerNode(this, "치명타 회피", new EvadeNode(transform, "Backward")) // EvadeNode 사용
+                })
             }),
 
             // --- 우선 순위 2: 기회 포착 ---
@@ -64,31 +70,19 @@ public class BT_Aggressive_Paladin : BT_Brain
             {
                 // 적의 애니메이터가 '방어 종료 후' 상태임을 감지
                 // 'defendEndedStateName'을 사용하거나, 적절한 '방어 종료 후' 상태 이름을 직접 전달합니다.
+                new IsEnemyDefendEndedNode(targetAnimator, defendEndedStateName), // 이곳에 정확한 방어 종료 후 애니메이션 상태 이름 지정
                 new IsEnemyInDistanceNode(transform, target, spinAttackRange),
                 new IsCooldownCompleteNode(transform, "SpinAttack"),
                 new ActionLoggerNode(this, "필살기(스핀 공격)", new SpinAttackNode(transform))
             }),
 
-            // --- 우선 순위 3: 방어 또는 차선책(회피) ---
+            // --- 우선 순위 3: 일반 공격에 대한 2초 방어 ---
             new Sequence(new List<Node>
             {
                 new IsEnemyAttackImminentNode(targetAnimator, normalAttackStateName),
                 new IsHealthHighEnoughToDefendNode(transform, lowHealthThreshold),
-                new Selector(new List<Node> // 방어를 먼저 시도하고, 안되면 회피
-                {
-                    // 3-1. 방어 시도
-                    new Sequence(new List<Node>
-                    {
-                        new IsCooldownCompleteNode(transform, "Defend"),
-                        new ActionLoggerNode(this, "방어", new DefendNode(transform))
-                    }),
-                    // 3-2. 방어가 쿨타임이면 -> 긴급 회피 시도
-                    new Sequence(new List<Node>
-                    {
-                        new IsCooldownCompleteNode(transform, "Evade"),
-                        new ActionLoggerNode(this, "긴급 회피", new EvadeNode(transform, "Backward"))
-                    })
-                })
+                new IsCooldownCompleteNode(transform, "Defend"),
+                new ActionLoggerNode(this, "2초 방어", new TimedDefendNode(transform, 2.0f)) // 이 한 줄로 교체!
             }),
 
             // --- 우선 순위 4: 핵심 교전 로직 (거리별 판단) ---

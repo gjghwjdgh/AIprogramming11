@@ -103,4 +103,26 @@ public class PaladinActuator : MonoBehaviour
         // 동작이 모두 끝났으므로, 약속했던 콜백 함수를 실행해서 알려줌
         onComplete?.Invoke();
     }
+
+
+    public void ExecuteTimedDefense(float duration)
+    {
+        StartCoroutine(TimedDefenseCoroutine(duration));
+    }
+
+    private System.Collections.IEnumerator TimedDefenseCoroutine(float duration)
+    {
+        OnActionStart(); // 행동 시작
+
+        // 1. 방어 시작 애니메이션을 발동시킴
+        StartDefense();
+
+        // 2. 설정된 시간(duration) 만큼 기다림
+        yield return new WaitForSeconds(duration);
+
+        // 3. 시간이 지나면 방어 해제 애니메이션을 발동시킴
+        StopDefense();
+
+        OnActionEnd(); // 행동 종료
+    }
 }
