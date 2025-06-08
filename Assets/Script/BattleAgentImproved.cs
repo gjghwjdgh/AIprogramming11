@@ -12,11 +12,13 @@ public class BattleAgentImproved : Agent
     public float moveSpeed = 2f;
     public float maxHealth = 100f;
 
+    [Header("Agent Side")]
+    public bool isLeftAgent;
+
     private float currentHealth;
     private bool isAttacking = false;
     private bool isDefending = false;
 
-    // Cooldown Timers
     private float attackCooldown = 2.5f;
     private float defendCooldown = 2.0f;
     private float dodgeCooldown = 4.0f;
@@ -27,6 +29,8 @@ public class BattleAgentImproved : Agent
 
     private int stepCount = 0;
     private const int maxStepLimit = 100000;
+
+    private enum AttackType { Attack0, Attack1, Attack2 }
 
     public override void Initialize()
     {
@@ -54,6 +58,9 @@ public class BattleAgentImproved : Agent
         attackTimer = 0f;
         defendTimer = 0f;
         dodgeTimer = 0f;
+
+        BattleUIController.Instance?.UpdateHealth(isLeftAgent, currentHealth, maxHealth);
+        BattleUIController.Instance?.HideWinMessage();
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -97,22 +104,22 @@ public class BattleAgentImproved : Agent
 
         switch (action)
         {
-            case 0: // Idle
+            case 0:
                 animator.SetFloat("v", 0);
                 AddReward(-0.005f);
                 break;
-            case 1: // Move Forward
+            case 1:
                 Move(Vector3.forward);
                 AddReward(0.01f);
                 break;
-            case 2: // Move Backward
+            case 2:
                 Move(Vector3.back);
                 AddReward(0.005f);
                 break;
-            case 3: // Attack
+            case 3: // 공격 0
                 if (attackTimer <= 0f)
                 {
-                    PerformAttack();
+                    PerformAttack(AttackType.Attack0);
                     attackTimer = attackCooldown;
                 }
                 else
@@ -120,14 +127,36 @@ public class BattleAgentImproved : Agent
                     AddReward(-0.3f);
                 }
                 break;
-            case 4: // Defend
+            case 4: // 공격 1
+                if (attackTimer <= 0f)
+                {
+                    PerformAttack(AttackType.Attack1);
+                    attackTimer = attackCooldown;
+                }
+                else
+                {
+                    AddReward(-0.3f);
+                }
+                break;
+            case 5: // 공격 2
+                if (attackTimer <= 0f)
+                {
+                    PerformAttack(AttackType.Attack2);
+                    attackTimer = attackCooldown;
+                }
+                else
+                {
+                    AddReward(-0.3f);
+                }
+                break;
+            case 6:
                 if (defendTimer <= 0f)
                 {
                     PerformDefend();
                     defendTimer = defendCooldown;
                 }
                 break;
-            case 5: // Dodge
+            case 7:
                 if (dodgeTimer <= 0f)
                 {
                     PerformDodge();
@@ -139,12 +168,17 @@ public class BattleAgentImproved : Agent
         float distanceToEnemy = enemy != null ? Vector3.Distance(transform.position, enemy.position) : 0f;
         AddReward(0.01f * (1.0f - Mathf.Clamp01(distanceToEnemy / 10f)));
 
-        // 종료 조건 체크
         if (currentHealth <= 0f)
         {
             Debug.Log($"{gameObject.name} 패배 (체력 0)");
             SetReward(-1f);
             EndEpisode();
+
+            if (BattleUIController.Instance != null)
+            {
+                string winner = isLeftAgent ? "Right Agent" : "Left Agent";
+                BattleUIController.Instance.ShowWinMessage(winner);
+            }
         }
         else if (stepCount >= maxStepLimit)
         {
@@ -160,6 +194,12 @@ public class BattleAgentImproved : Agent
                 Debug.Log($"{gameObject.name} 승리 (적 처치)");
                 SetReward(+1f);
                 EndEpisode();
+
+                if (BattleUIController.Instance != null)
+                {
+                    string winner = isLeftAgent ? "Left Agent" : "Right Agent";
+                    BattleUIController.Instance.ShowWinMessage(winner);
+                }
             }
         }
     }
@@ -171,10 +211,26 @@ public class BattleAgentImproved : Agent
         animator.SetFloat("v", direction.z);
     }
 
-    private void PerformAttack()
+    private void PerformAttack(AttackType type)
     {
-        animator.SetTrigger("attackTrigger");
         isAttacking = true;
+
+        int index = (int)type;
+        animator.SetInteger("attackIndex", index);
+        animator.SetTrigger("attackTrigger");
+
+        switch (type)
+        {
+            case AttackType.Attack0:
+                BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Attack1", attackCooldown);
+                break;
+            case AttackType.Attack1:
+                BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Attack2", attackCooldown);
+                break;
+            case AttackType.Attack2:
+                BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Attack3", attackCooldown);
+                break;
+        }
 
         if (enemy != null && Vector3.Distance(transform.position, enemy.position) < 1.5f)
         {
@@ -198,14 +254,19 @@ public class BattleAgentImproved : Agent
         isDefending = true;
         animator.SetBool("isDefending", true);
         AddReward(+0.1f);
+
+        BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Defend", defendCooldown);
         Invoke(nameof(ResetDefendState), 1.0f);
     }
 
     private void PerformDodge()
     {
-        animator.SetTrigger("dodge");
+        Debug.Log("회피 모션 시작됨!");
+        animator.SetTrigger("dodgeTrigger");
         rb.MovePosition(rb.position + transform.right * -1.5f);
         AddReward(-0.05f);
+
+        BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Dodge", dodgeCooldown);
     }
 
     public void TakeDamage(float amount)
@@ -219,11 +280,19 @@ public class BattleAgentImproved : Agent
         currentHealth -= amount;
         AddReward(-0.5f);
 
+        BattleUIController.Instance?.UpdateHealth(isLeftAgent, currentHealth, maxHealth);
+
         if (currentHealth <= 0f)
         {
             Debug.Log($"{gameObject.name} 패배 (피격으로 체력 0)");
             SetReward(-1f);
             EndEpisode();
+
+            if (BattleUIController.Instance != null)
+            {
+                string winner = isLeftAgent ? "Right Agent" : "Left Agent";
+                BattleUIController.Instance.ShowWinMessage(winner);
+            }
         }
     }
 
@@ -239,10 +308,13 @@ public class BattleAgentImproved : Agent
     {
         var da = actionsOut.DiscreteActions;
         da[0] = 0;
+
         if (Input.GetKey(KeyCode.W)) da[0] = 1;
         else if (Input.GetKey(KeyCode.S)) da[0] = 2;
-        else if (Input.GetKey(KeyCode.Q)) da[0] = 3;
-        else if (Input.GetKey(KeyCode.LeftShift)) da[0] = 4;
-        else if (Input.GetKey(KeyCode.Space)) da[0] = 5;
+        else if (Input.GetKey(KeyCode.Q)) da[0] = 3; // 공격0
+        else if (Input.GetKey(KeyCode.E)) da[0] = 4; // 공격1
+        else if (Input.GetKey(KeyCode.R)) da[0] = 5; // 공격2
+        else if (Input.GetKey(KeyCode.LeftShift)) da[0] = 6; // 방어
+        else if (Input.GetKey(KeyCode.Space)) da[0] = 7; // 회피
     }
 }
