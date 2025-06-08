@@ -10,6 +10,15 @@ public class Sword : MonoBehaviour
     public Vector3 acceleration { get; private set; }
 
 
+    void Start()
+    {
+        // 만약 owner가 안 지정되면, 자동으로 루트 오브젝트를 owner로 지정
+        if (owner == null)
+        {
+            owner = transform.root.gameObject;
+            Debug.Log($"Sword owner가 자동으로 할당되었습니다: {owner.name}");
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -66,6 +75,15 @@ public class Sword : MonoBehaviour
         {
             Debug.Log($"{owner.name}의 검이 {other.name}에게 데미지!");
             target.TakeDamage(damage);
+
+            //추가
+            // Sword의 owner에 연결된 Agent에게 보상 지급
+            MLtest2 attackerAgent = owner.GetComponent<MLtest2>();
+            if (attackerAgent != null)
+            {
+                attackerAgent.OnSuccessfulAttack(damage);
+               // attackerAgent.OnFailedAttack(damage);
+            }
         }
     }
 

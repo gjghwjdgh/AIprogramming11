@@ -21,6 +21,9 @@ public class MLtest : Agent
     public float targetHealth = 100f;
 
 
+   // public float lastAttackDamage = 0f;
+
+
     Rigidbody rBody;
 
     //public override void Heuristic(in ActionBuffers actionsOut)
@@ -95,13 +98,18 @@ public class MLtest : Agent
         //this.rBody.linearVelocity = Vector3.zero;
         //this.rBody.angularVelocity = Vector3.zero;
 
-        Target.localPosition = new Vector3(-214.36f, 0.0f, 5.0f);
+        Target.localPosition = new Vector3(-214.0f, 0.0f, 5.0f);
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
         sensor.AddObservation(Target.localPosition);
         sensor.AddObservation(this.transform.localPosition);
+
+        // 상대와의 거리 (옵션)
+        Vector3 relativePosition = Target.localPosition - transform.localPosition;
+        sensor.AddObservation(relativePosition);
+
 
         //칼의 현재 위치, 속도 계산
         Vector3 currentPos = sword.transform.position;
@@ -151,7 +159,7 @@ public class MLtest : Agent
 
         if (attackAccel >= 5f)
         {
-            float scaledReward = baseReward * (attackAccel / 5f);
+            float scaledReward = baseReward * (attackAccel / 3f);
             AddReward(scaledReward);
             Debug.Log($"회피 성공! 공격 가속도: {attackAccel}, 보상: {scaledReward}");
         }
@@ -172,6 +180,23 @@ public class MLtest : Agent
     {
         int discreteAction = actionBuffers.DiscreteActions[0];
 
+        float distanceToTarget = Vector3.Distance(transform.localPosition, Target.localPosition);
+
+
+        if (distanceToTarget < 4.0f)
+        {
+            AddReward(0.3f); // 가까우면 보상
+        }
+
+        //// 가까워질수록 +보상
+        //float closeReward = 1.0f - Mathf.Clamp01(distanceToTarget / 10.0f); // 10단위 정규화
+        //AddReward(closeReward * 0.5f);  // 0.01은 가중치
+
+        //// 너무 멀어지면 패널티
+        //if (distanceToTarget > 5.0f)
+        //{
+        //    AddReward(-0.5f); // 페널티도 고려
+        //}
         // 기본적으로 항상 방어 해제
         //bool isDefending = false;
         //// 기본적으로 항상 방어자세 해제
@@ -187,11 +212,11 @@ public class MLtest : Agent
                 break;
             case 1:
                 rootMotionMover.animator.SetFloat("v", 1.0f);
-                AddReward(0.01f);
+                AddReward(0.2f);
                 break;
             case 2:
                 rootMotionMover.animator.SetFloat("v", -2.0f);
-                AddReward(0.01f);
+                AddReward(0.1f);
                 break;
             case 3:
                 rootMotionMover.Dodge();
@@ -224,7 +249,7 @@ public class MLtest : Agent
         }
         else if (agentHealth <= 0f)
         {
-            SetReward(-1.0f);
+            SetReward(-1.5f);
             EndEpisode();
         }
     }
@@ -283,7 +308,7 @@ public class MLtest : Agent
     //    }
     //}
 
-
+    //public float lastAttackDamage = 0f;
 
     public void TakeDamage(float damage)
     {
@@ -295,6 +320,12 @@ public class MLtest : Agent
         }
     }
 
+    public void OnSuccessfulAttack(float damageDefault)
+    {
+        float scaledReward = damageDefault * 0.2f; // 예: 데미지 비율 0.01로 조정
+        AddReward(scaledReward);
+        Debug.Log($"공격 성공! 데미지: {damageDefault}, 보상: {scaledReward}");
+    }
 
 
     public void OnEffectiveCounterAttack(float damageDefault)

@@ -28,6 +28,9 @@ public class RootMotionMover : MonoBehaviour
 
     private Rigidbody rBody;
 
+    
+
+
 
 
 

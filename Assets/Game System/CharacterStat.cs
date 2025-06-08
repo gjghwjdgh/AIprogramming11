@@ -8,6 +8,8 @@ public class Character : MonoBehaviour, IDamageable
     public float health = 100f;
     public float maxHealth = 100f;
 
+    //public float lastAttackDamage = 0f;
+
     public void TakeDamage(float damage)
     {
         health -= damage;

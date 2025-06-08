@@ -721,7 +721,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -213.9
+      value: -214.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 542a721634608c743a26148a047c6c6e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4100,7 +4100,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 500
+  MaxStep: 15000
   sword: {fileID: 674388379}
   rootMotionMover: {fileID: 1508895968}
   agentHealth: 100
@@ -5386,7 +5386,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 500
+  MaxStep: 15000
   sword: {fileID: 106905409}
   rootMotionMover: {fileID: 1847199885}
   agentHealth: 100
