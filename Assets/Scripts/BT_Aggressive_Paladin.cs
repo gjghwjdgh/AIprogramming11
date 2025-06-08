@@ -56,84 +56,89 @@ public class BT_Aggressive_Paladin : BT_Brain
             new Selector(new List<Node>
             {
                 new Sequence(new List<Node> { new IsHealthLowNode(transform, 0f), new ActionLoggerNode(this, "사망", new DieNode(transform)) }),
-                // 적의 치명타 공격이 감지되고, 회피 쿨타임이 아닐 때 -> 뒤로 회피
                 new Sequence(new List<Node>
                 {
                     new IsEnemyCritAttackDetectedNode(targetAnimator, criticalAttackStateName),
                     new IsCooldownCompleteNode(transform, "Evade"),
-                    new ActionLoggerNode(this, "치명타 회피", new EvadeNode(transform, "Backward")) // EvadeNode 사용
+                    new ActionLoggerNode(this, "치명타 회피", new EvadeNode(transform, "Backward"))
                 })
             }),
 
-            // --- 우선 순위 2: 기회 포착 ---
+            // ### 새로운 우선 순위 2: 내 공격이 먼저! (최적 거리일 때 공격) ###
+            // 자신이 완벽한 공격 위치에 있다면, 다른 무엇보다 먼저 공격을 시도합니다.
             new Sequence(new List<Node>
             {
-                // 적의 애니메이터가 '방어 종료 후' 상태임을 감지
-                // 'defendEndedStateName'을 사용하거나, 적절한 '방어 종료 후' 상태 이름을 직접 전달합니다.
-                new IsEnemyDefendEndedNode(targetAnimator, defendEndedStateName), // 이곳에 정확한 방어 종료 후 애니메이션 상태 이름 지정
+                new IsInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
+                new Selector(new List<Node>
+                {
+                    // 상대가 방어 중이면 -> 가드 브레이크(발차기) 시도
+                    new Sequence(new List<Node>
+                    {
+                        new IsEnemyDefendingNode(targetAnimator, defendStateName),
+                        new IsEnemyInDistanceNode(transform, target, kickAttackRange),
+                        new IsCooldownCompleteNode(transform, "KickAttack"),
+                        new ActionLoggerNode(this, "가드 브레이크(발차기)", new KickAttackNode(transform))
+                    }),
+                    // 공격하기에 안전하면 -> 공격
+                    new Sequence(new List<Node>
+                    {
+                        new IsSafeToAttackNode(transform, targetAnimator, lowHealthThreshold),
+                        new Selector(new List<Node>
+                        {
+                            new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "KickAttack"), new ActionLoggerNode(this, "발차기", new KickAttackNode(transform)) }),
+                            new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "BasicAttack"), new ActionLoggerNode(this, "기본 공격", new BasicAttackNode(transform)) })
+                        })
+                    }),
+                })
+            }),
+
+            // --- 우선 순위 3: 기회 포착 (적이 방어를 풀었을 때) ---
+            new Sequence(new List<Node>
+            {
+                new IsEnemyDefendEndedNode(targetAnimator, defendEndedStateName),
                 new IsEnemyInDistanceNode(transform, target, spinAttackRange),
                 new IsCooldownCompleteNode(transform, "SpinAttack"),
                 new ActionLoggerNode(this, "필살기(스핀 공격)", new SpinAttackNode(transform))
             }),
 
-            // --- 우선 순위 3: 일반 공격에 대한 2초 방어 ---
+            // --- 우선 순위 4: 맞불 공격 또는 방어 (적이 공격해올 때) ---
             new Sequence(new List<Node>
             {
                 new IsEnemyAttackImminentNode(targetAnimator, normalAttackStateName),
                 new IsHealthHighEnoughToDefendNode(transform, lowHealthThreshold),
-                new IsCooldownCompleteNode(transform, "Defend"),
-                new ActionLoggerNode(this, "2초 방어", new TimedDefendNode(transform, 2.0f)) // 이 한 줄로 교체!
+                new Selector(new List<Node>
+                {
+                    // 1순위 시도 - 맞불 공격
+                    new Sequence(new List<Node>
+                    {
+                        new IsCooldownCompleteNode(transform, "BasicAttack"),
+                        new ActionLoggerNode(this, "맞불 공격!", new BasicAttackNode(transform))
+                    }),
+                    // 2순위 시도 - 방어
+                    new Sequence(new List<Node>
+                    {
+                        new IsCooldownCompleteNode(transform, "Defend"),
+                        new ActionLoggerNode(this, "방어", new TimedDefendNode(transform, 2.0f))
+                    })
+                })
             }),
 
-            // --- 우선 순위 4: 핵심 교전 로직 (거리별 판단) ---
+            // --- 우선 순위 5: 위치 선정 (공격 기회가 없을 때 거리 조절) ---
             new Selector(new List<Node>
             {
-                // 4-1. 너무 가까울 때: 걸어서 뒤로 물러나기
+                // 5-1. 너무 가까울 때: 걸어서 뒤로 물러나기
                 new Sequence(new List<Node>
                 {
                     new IsEnemyInDistanceNode(transform, target, tooCloseDistance),
                     new ActionLoggerNode(this, "전술적 후퇴", new MaintainDistanceNode(transform, target, (optimalCombatDistanceMin + optimalCombatDistanceMax) / 2f, 0.3f))
                 }),
 
-                // 4-3. 너무 멀 때: 타겟에게 접근
+                // 5-2. 너무 멀 때: 타겟에게 접근
                 new Sequence(new List<Node>
                 {
                     new IsNotInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
                     new ActionLoggerNode(this, "타겟에게 접근", new MaintainDistanceNode(transform, target, (optimalCombatDistanceMin + optimalCombatDistanceMax) / 2f, 0.3f))
                 }),
-                // 4-2. 최적 교전 거리일 때: 공격 또는 간 보기
-                new Sequence(new List<Node>
-                {
-                    new IsInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
-                    new Selector(new List<Node>
-                    {
-                        // 상대가 방어 중이면 -> 가드 브레이크(발차기) 시도
-                        new Sequence(new List<Node>
-                        {
-                            new IsEnemyDefendingNode(targetAnimator, defendStateName),
-                            new IsEnemyInDistanceNode(transform, target, kickAttackRange),
-                            new IsCooldownCompleteNode(transform, "KickAttack"),
-                            new ActionLoggerNode(this, "가드 브레이크(발차기)", new KickAttackNode(transform))
-                        }),
-                        // 공격하기에 안전하면 -> 공격
-                        new Sequence(new List<Node>
-                        {
-                            new IsSafeToAttackNode(transform, targetAnimator, lowHealthThreshold),
-                            new Selector(new List<Node>
-                            {
-                                new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "KickAttack"), new ActionLoggerNode(this, "발차기", new KickAttackNode(transform)) }),
-                                new Sequence(new List<Node> { new IsCooldownCompleteNode(transform, "BasicAttack"), new ActionLoggerNode(this, "기본 공격", new BasicAttackNode(transform)) })
-                            })
-                        }),
-                        // 할 게 없으면 -> 간 보기
-                        // new Sequence(new List<Node>
-                        // {
-                        //     new IsCooldownCompleteNode(transform, "Strafe"),
-                        //     new ActionLoggerNode(this, "간 보기(스트레이프)", new StrafeNode(transform))
-                        // })
-                    })
-                }),
-
             }),
 
             // --- 최후 순위: 대기 ---
