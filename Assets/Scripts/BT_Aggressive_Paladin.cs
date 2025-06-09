@@ -59,7 +59,7 @@ public class BT_Aggressive_Paladin : BT_Brain
                 new Sequence(new List<Node>
                 {
                     new IsEnemyCritAttackDetectedNode(targetAnimator, criticalAttackStateName),
-                    new ActionLoggerNode(this, "치명타 회피", new EvadeNode(transform, Random.value > 0.5f ? "Left" : "Right"))
+                    new ActionLoggerNode(this, "치명타 회피", new EvadeNode(transform, "Backward"))
                 })
             }),
 
