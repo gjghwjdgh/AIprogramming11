@@ -6,7 +6,7 @@ using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 
-public class MLtest : Agent
+public class MLtest : Agent, IDamageable
 {
     public GameObject sword;
     public RootMotionMover rootMotionMover;
