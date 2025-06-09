@@ -705,6 +705,22 @@ PrefabInstance:
       value: Movement
       objectReference: {fileID: 0}
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: safeCombatDistanceMax_Inspector
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: safeCombatDistanceMin_Inspector
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: optimalCombatDistanceMax_Inspector
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
+      propertyPath: optimalCombatDistanceMin_Inspector
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: <optimalCombatDistanceMax>k__BackingField
       value: 2
       objectReference: {fileID: 0}
@@ -980,7 +996,7 @@ PrefabInstance:
         'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:RightArm'\n\tTransform
         'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tTransform 'mixamorig:RightFoot'\n\tTransform
         'mixamorig:Head'\n\tTransform 'mixamorig:LeftUpLeg'\n\tand more ...\n\tFrom
-        animation clip 'mixamo.com'\n\tFrom animation clip 'mixamo.com'"
+        animation clip 'mixamo.com'"
       objectReference: {fileID: 0}
     - target: {fileID: 8863523281694050311, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: m_ApplyRootMotion
@@ -1947,7 +1963,7 @@ PrefabInstance:
         'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:RightArm'\n\tTransform
         'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tTransform 'mixamorig:RightFoot'\n\tTransform
         'mixamorig:Head'\n\tTransform 'mixamorig:LeftUpLeg'\n\tand more ...\n\tFrom
-        animation clip 'mixamo.com'\n\tFrom animation clip 'mixamo.com'"
+        animation clip 'mixamo.com'"
       objectReference: {fileID: 0}
     - target: {fileID: 4561918846179043438, guid: a00a5dc7b0b553849a3e3847841359d7, type: 3}
       propertyPath: m_ApplyRootMotion
