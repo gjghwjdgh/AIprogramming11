@@ -280,6 +280,7 @@ public class MLtest2 : Agent, IDamageable
 
     public void TakeDamage(float damage)
     {
+        Debug.Log(damage);
         agentHealth -= damage;
         BattleUIController.Instance?.UpdateHealth(isLeftAgent, agentHealth, 100f);
         if (agentHealth <= 0f)
