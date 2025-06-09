@@ -1,36 +1,47 @@
+// 파일 이름: MoveAwayNode.cs
 using UnityEngine;
 
 public class MoveAwayNode : Node
 {
     private Transform agentTransform;
-    private Transform targetTransform;
-    private Animator animator;
-    private float moveSpeed = 2.0f; // 캐릭터의 후퇴 속도
+    private Transform targetTransform; // 타겟 정보가 다시 필요해짐
+    private PaladinActuator actuator;
+    private CooldownManager cooldownManager;
+    private string cooldownName = "Reposition";
+    private float cooldownDuration = 0.02f;
 
+    // 생성자가 이제 Transform 2개를 받도록 수정
     public MoveAwayNode(Transform agentTransform, Transform targetTransform)
     {
         this.agentTransform = agentTransform;
-        this.targetTransform = targetTransform;
-        this.animator = agentTransform.GetComponent<Animator>();
+        this.targetTransform = targetTransform; // 타겟 정보 저장
+        this.actuator = agentTransform.GetComponent<PaladinActuator>();
+        this.cooldownManager = agentTransform.GetComponent<CooldownManager>();
     }
 
     public override NodeState Evaluate()
     {
-        if (targetTransform == null) return NodeState.FAILURE;
+        if (targetTransform == null || actuator == null || cooldownManager == null) return NodeState.FAILURE;
 
-        // 목표 반대 방향 계산 (적 -> 나)
-        Vector3 direction = agentTransform.position - targetTransform.position;
-        direction.y = 0;
+        if (!cooldownManager.IsCooldownFinished(cooldownName))
+        {
+            return NodeState.FAILURE;
+        }
 
-        // 캐릭터를 목표 반대 방향으로 이동시키지만, 여전히 적을 바라보게 함
-        agentTransform.position += direction.normalized * moveSpeed * Time.deltaTime;
-        agentTransform.rotation = Quaternion.LookRotation(-direction); // 적을 바라봄
+        // --- 핵심 수정 부분 ---
+        // 1. 타겟을 향하는 방향을 계산합니다.
+        Vector3 directionToTarget = targetTransform.position - agentTransform.position;
+        directionToTarget.y = 0; // 높이는 무시
 
-        // Animator의 MoveSpeed 파라미터에 후퇴 속도 전달 (뒤로 걷는 애니메이션용)
-        // 여기서는 앞으로 걷는 것과 구분하기 위해 음수나 다른 값을 사용할 수도 있지만,
-        // 일단 1.0f로 설정하여 걷는 애니메이션을 재생합니다.
-        animator.SetFloat("MoveSpeed", 1.0f);
+        // 2. 그 방향을 바라보도록 회전 명령을 내립니다.
+        actuator.SetRotation(Quaternion.LookRotation(directionToTarget));
+
+        // 3. 뒤로 걷기 명령을 내립니다.
+        actuator.SetMovement(-1.0f);
+        // --- 수정 끝 ---
         
+        cooldownManager.StartCooldown(cooldownName, cooldownDuration);
+
         return NodeState.SUCCESS;
     }
 }

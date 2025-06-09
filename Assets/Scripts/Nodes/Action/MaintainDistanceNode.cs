@@ -1,57 +1,61 @@
+// 파일 이름: MaintainDistanceNode.cs (수정 완료 버전)
 using UnityEngine;
 
-// 파일 이름: MaintainDistanceNode.cs
 public class MaintainDistanceNode : Node
 {
+    // 기존 변수 (이름 유지)
     private Transform agentTransform;
     private Transform targetTransform;
-    private Animator animator;
+    private PaladinActuator actuator;
     private float idealDistance;
-    private float tolerance = 0.5f; // 이상적 거리의 허용 오차
-    private float moveSpeed = 2.0f;
+    private float tolerance;
+    
+    // 새로 추가된 변수
+    private float directionUpdateTimer;
+    private const float DIRECTION_UPDATE_INTERVAL = 1.0f; // 방향 업데이트 주기 (1초)
 
-    public MaintainDistanceNode(Transform agentTransform, Transform target, float idealDistance)
+    // 생성자는 그대로 유지하여 다른 스크립트의 오류를 해결합니다.
+    public MaintainDistanceNode(Transform agent, Transform target, float idealDist, float tol)
     {
-        this.agentTransform = agentTransform;
+        this.agentTransform = agent;
         this.targetTransform = target;
-        this.animator = agentTransform.GetComponent<Animator>();
-        this.idealDistance = idealDistance;
+        this.actuator = agent.GetComponent<PaladinActuator>();
+        this.idealDistance = idealDist;
+        this.tolerance = tol;
     }
 
     public override NodeState Evaluate()
     {
-        if (targetTransform == null) return NodeState.FAILURE;
+        if (targetTransform == null || actuator == null) return NodeState.FAILURE;
 
-        float currentDistance = Vector3.Distance(agentTransform.position, targetTransform.position);
+        float distance = Vector3.Distance(agentTransform.position, targetTransform.position);
+
+        // 1. 목표 거리에 도달했는지 확인
+        if (Mathf.Abs(distance - idealDistance) <= tolerance)
+        {
+            actuator.SetMovement(0); // 목표 도달 시 멈춤
+            directionUpdateTimer = DIRECTION_UPDATE_INTERVAL; // 타이머를 초기화하여 다음에 즉시 방향을 보도록 함
+            return NodeState.SUCCESS; // 행동 성공 및 종료
+        }
+
+        // --- 여기서부터는 목표 거리를 맞추기 위해 움직여야 하는 경우 ---
         
-        // 이상적 거리보다 멀리 떨어져 있으면
-        if (currentDistance > idealDistance + tolerance)
+        // 2. 타이머를 업데이트하고, 1초가 지났는지 확인
+        directionUpdateTimer += Time.deltaTime;
+        if (directionUpdateTimer >= DIRECTION_UPDATE_INTERVAL)
         {
-            // 타겟을 향해 이동
-            Vector3 direction = targetTransform.position - agentTransform.position;
-            direction.y = 0;
-            agentTransform.position += direction.normalized * moveSpeed * Time.deltaTime;
-            agentTransform.rotation = Quaternion.LookRotation(direction);
-            animator.SetFloat("MoveSpeed", 1.0f);
-            return NodeState.RUNNING; // 아직 이동 중이므로 RUNNING 반환
+            directionUpdateTimer = 0f; // 타이머 리셋
+            
+            // 3. 방향 재설정: 타겟을 바라보도록 회전
+            Vector3 lookPosition = targetTransform.position - agentTransform.position;
+            lookPosition.y = 0; // AI가 위아래로 기울지 않도록 함
+            actuator.SetRotation(Quaternion.LookRotation(lookPosition));
         }
-        // 이상적 거리보다 너무 가까우면
-        else if (currentDistance < idealDistance - tolerance)
-        {
-            // 타겟으로부터 후퇴
-            Vector3 direction = agentTransform.position - targetTransform.position;
-            direction.y = 0;
-            agentTransform.position += direction.normalized * moveSpeed * Time.deltaTime;
-            agentTransform.rotation = Quaternion.LookRotation(-direction);
-            animator.SetFloat("MoveSpeed", 1.0f);
-            return NodeState.RUNNING; // 아직 이동 중이므로 RUNNING 반환
-        }
-        // 이상적인 거리 범위 안에 있으면
-        else
-        {
-            // 이동을 멈춤
-            animator.SetFloat("MoveSpeed", 0f);
-            return NodeState.SUCCESS; // 목표 달성! 성공 반환
-        }
+
+        // 4. 움직임 제어: 거리에 따라 전진 또는 후진
+        actuator.SetMovement(distance > idealDistance ? 0.75f : -0.75f);
+        
+        // 5. 행동이 아직 끝나지 않았으므로 '진행 중' 상태 반환
+        return NodeState.RUNNING;
     }
 }

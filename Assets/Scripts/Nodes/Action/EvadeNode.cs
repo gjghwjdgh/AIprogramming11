@@ -1,56 +1,74 @@
+// 파일 이름: EvadeNode.cs (최종 완성 버전)
 using UnityEngine;
+using System.Collections;
 
-// 파일 이름: EvadeNode.cs
 public class EvadeNode : Node
 {
     private Transform agentTransform;
-    private Animator animator;
+    private PaladinActuator actuator;
     private CooldownManager cooldownManager;
+    private MonoBehaviour coroutineRunner;
     private string direction;
-    private float evadeDistance = 2f; // 회피 거리
 
-    // 생성자에 방향(direction)을 받는 부분이 추가되었습니다.
-    public EvadeNode(Transform agentTransform, string direction = "Backward")
+    private bool isEvading = false;
+    private float evadeAnimationLength = 1.0f; // 회피 애니메이션의 총 길이
+    private float evadeCooldown = 5f; // 회피 후 쿨타임 (5초는 예시)
+
+    public EvadeNode(Transform agentTransform, string direction)
     {
         this.agentTransform = agentTransform;
-        this.animator = agentTransform.GetComponent<Animator>();
+        this.actuator = agentTransform.GetComponent<PaladinActuator>();
         this.cooldownManager = agentTransform.GetComponent<CooldownManager>();
+        this.coroutineRunner = agentTransform.GetComponent<MonoBehaviour>();
         this.direction = direction;
     }
 
     public override NodeState Evaluate()
     {
-        // EvadeNode는 보통 IsCooldownCompleteNode 뒤에 오므로,
-        // 여기서는 쿨타임 체크를 생략하고 행동과 쿨타임 시작에 집중합니다.
-        
-        // "Evade" 애니메이션 트리거를 발동시킵니다.
-        // (세부 구현: Animator에서 Blend Tree 등을 사용해 실제 방향에 맞는 애니메이션을 재생할 수 있습니다)
-        animator.SetTrigger("Evade");
+        if (isEvading)
+        {
+            return NodeState.RUNNING;
+        }
 
-        // 물리적으로 위치 이동 (간단한 예시)
-        Vector3 evadeVector = GetDirectionVector();
-        agentTransform.position += evadeVector * evadeDistance;
+        // 이제 EvadeNode가 스스로 쿨타임을 확인합니다.
+        if (!cooldownManager.IsCooldownFinished("Evade"))
+        {
+            return NodeState.FAILURE;
+        }
 
-        // 10초 쿨타임을 시작합니다.
-        cooldownManager.StartCooldown("Evade", 10f);
+        if (coroutineRunner == null) return NodeState.FAILURE;
 
-        return NodeState.SUCCESS;
+        isEvading = true;
+        // ▼▼▼ 핵심 수정: 회피를 시작할 때 쿨타임을 함께 시작! ▼▼▼
+        cooldownManager.StartCooldown("Evade", evadeCooldown);
+
+        if (direction == "Left" || direction == "Right")
+        {
+            coroutineRunner.StartCoroutine(SidewaysEvadeCoroutine());
+        }
+        else 
+        {
+            coroutineRunner.StartCoroutine(BackwardEvadeCoroutine());
+        }
+
+        return NodeState.RUNNING;
     }
 
-    private Vector3 GetDirectionVector()
+    private IEnumerator SidewaysEvadeCoroutine()
     {
-        switch (direction.ToLower())
-        {
-            case "forward":
-                return agentTransform.forward;
-            case "backward":
-                return -agentTransform.forward;
-            case "left":
-                return -agentTransform.right;
-            case "right":
-                return agentTransform.right;
-            default:
-                return -agentTransform.forward; // 기본값은 뒤로 회피
-        }
+        Quaternion originalRotation = agentTransform.rotation;
+        float angle = (direction == "Left") ? 90f : -90f;
+        agentTransform.Rotate(0, angle, 0);
+        actuator.Dodge("Backward");
+        yield return new WaitForSeconds(evadeAnimationLength);
+        agentTransform.rotation = originalRotation;
+        isEvading = false;
+    }
+
+    private IEnumerator BackwardEvadeCoroutine()
+    {
+        actuator.Dodge("Backward");
+        yield return new WaitForSeconds(evadeAnimationLength);
+        isEvading = false;
     }
 }
