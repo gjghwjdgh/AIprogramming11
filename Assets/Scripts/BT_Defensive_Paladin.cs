@@ -81,14 +81,6 @@ public class BT_Defensive_Paladin : BT_Brain
             // --- 우선 순위 3: 제한적인 공격 (반격 및 기습) ---
             new Selector(new List<Node>
             {
-                // 3-1. 적의 큰 빈틈(스턴 등)에 대한 반격
-                new Sequence(new List<Node>
-                {
-                    new IsEnemyWideOpenNode(targetAnimator, wideOpenStateNames),
-                    new IsEnemyInDistanceNode(transform, target, spinAttackRange),
-                    new IsCooldownCompleteNode(transform, "SpinAttack"),
-                    new ActionLoggerNode(this, "반격(필살기)", new SpinAttackNode(transform))
-                }),
 
                 // ▼▼▼ 이 부분이 핵심 수정사항입니다 ▼▼▼
                 // 3-2. 매우 안전할 때, 20% 확률로 기습적인 회전베기
@@ -97,11 +89,23 @@ public class BT_Defensive_Paladin : BT_Brain
                     new IsInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
                     new IsSafeToAttackNode(transform, targetAnimator, lowHealthThreshold),
                     new IsTargetNotAttackingOrDefendingNode(targetAnimator, normalAttackStateName, criticalAttackStateName, defendStateName),
-                    new RandomChanceNode(0.2f), // 20% 확률
+                    new RandomChanceNode(0.05f), // 5% 확률
                     new IsCooldownCompleteNode(transform, "SpinAttack"),
                     new ActionLoggerNode(this, "기습(회전베기)", new SpinAttackNode(transform))
-                })
+                }),
                 // ▲▲▲ 여기까지가 수정된 로직입니다 ▲▲▲
+                // 3-3. 제한적인 선제공격 (매우 안전하고 확률적으로만)
+                new Sequence(new List<Node>
+                {
+                    new IsInOptimalCombatRangeNode(transform, target, optimalCombatDistanceMin, optimalCombatDistanceMax),
+                    new IsSafeToAttackNode(transform, targetAnimator, lowHealthThreshold),
+                    new RandomChanceNode(0.1f), // 10%의 낮은 확률로만 선제공격 시도
+                    new IsCooldownCompleteNode(transform, "BasicAttack"),
+                    new ActionLoggerNode(this, "견제 공격", new BasicAttackNode(transform)),
+
+                    // ▼▼▼ 이 줄을 추가! ▼▼▼
+                    new ActionLoggerNode(this, "공격 후 후퇴", new EvadeNode(transform, "Backward"))
+                }),
             }),
 
             // --- 최후 순위: 대기 ---

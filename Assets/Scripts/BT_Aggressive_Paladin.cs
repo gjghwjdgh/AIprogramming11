@@ -118,7 +118,7 @@ public class BT_Aggressive_Paladin : BT_Brain
                                 // 60% 확률로 회전베기를 먼저 시도
                                 new Sequence(new List<Node>
                                 {
-                                    new RandomChanceNode(0.6f), // 60% 확률
+                                    new RandomChanceNode(0.3f), // 30% 확률
                                     new IsEnemyInDistanceNode(transform, target, spinAttackRange),
                                     new IsCooldownCompleteNode(transform, "SpinAttack"),
                                     new ActionLoggerNode(this, "회전베기(선제공격)", new SpinAttackNode(transform))
