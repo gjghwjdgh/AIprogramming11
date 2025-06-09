@@ -63,10 +63,10 @@ public class CooldownManager : MonoBehaviour
         switch(skillName)
         {
             case "BasicAttack": return 6f;
-            case "KickAttack": return 15f;
-            case "SpinAttack": return 30f;
-            case "Defend": return 10f;
-            case "Evade": return 5f;
+            case "KickAttack": return 10f;
+            case "SpinAttack": return 20f;
+            case "Defend": return 6f;
+            case "Evade": return 10f;
             default: return 0f;
         }
     }

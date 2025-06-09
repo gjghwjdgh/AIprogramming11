@@ -6,7 +6,7 @@ public class DefendNode : Node
     private PaladinActuator actuator;
     private CooldownManager cooldownManager;
     private string skillName = "Defend";
-    private float cooldownDuration = 6f;
+    private float cooldownDuration = 10f;
 
     public DefendNode(Transform agentTransform)
     {

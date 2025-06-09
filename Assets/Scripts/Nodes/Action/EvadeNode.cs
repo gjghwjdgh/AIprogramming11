@@ -12,7 +12,7 @@ public class EvadeNode : Node
 
     private bool isEvading = false;
     private float evadeAnimationLength = 1.0f; // 회피 애니메이션의 총 길이
-    private float evadeCooldown = 5f; // 회피 후 쿨타임 (5초는 예시)
+    private float evadeCooldown = 10f; // 회피 후 쿨타임 (6초로 수정)
 
     public EvadeNode(Transform agentTransform, string direction)
     {
@@ -22,7 +22,7 @@ public class EvadeNode : Node
         this.coroutineRunner = agentTransform.GetComponent<MonoBehaviour>();
         this.direction = direction;
     }
-
+    
     public override NodeState Evaluate()
     {
         if (isEvading)

@@ -1,0 +1,14 @@
+AgentName,SuccessfulAttacks,SuccessfulDefenses,MatchResult
+GongBT,41,4,Win
+SuBT,27,3,Loss
+GongBT,37,6,Win
+SuBT,21,1,Loss
+GongBT,40,4,Win
+SuBT,24,5,Loss
+GongBT,20,3,Loss
+SuBT,18,4,Win
+GongBT,31,6,Win
+SuBT,20,4,Loss
+GongBT,28,2,Win
+SuBT,23,3,Loss
+,,,
