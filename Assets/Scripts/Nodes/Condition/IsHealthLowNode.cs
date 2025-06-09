@@ -1,3 +1,4 @@
+// IsHealthLowNode.cs (변경 없음)
 using UnityEngine;
 
 public class IsHealthLowNode : Node

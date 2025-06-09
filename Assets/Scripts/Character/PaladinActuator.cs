@@ -1,50 +1,52 @@
-// 파일 이름: PaladinActuator.cs
+// PaladinActuator.cs (수정된 버전)
 using UnityEngine;
+using System.Collections;
 
-// BT 시스템이 사용할 고유한 이름의 '몸통' 클래스입니다.
 public class PaladinActuator : MonoBehaviour 
 {
     private Animator animator;
 
-    public bool IsActionInProgress { get; private set; } // 현재 행동이 진행 중인지 여부
+    // 공격 시 사용할 콜라이더 오브젝트 참조는 유지할 수 있습니다.
+    // 다른 스크립트에서 참조하거나, 수동으로 제어할 수 있기 때문입니다.
+    public GameObject basicAttackColliderObject;
+    public GameObject kickAttackColliderObject;
+    public GameObject spinAttackColliderObject;
 
-    public bool IsCurrentlyDefending { get; private set; } // 현재 방어 중인지 여부
+    public bool IsActionInProgress { get; private set; }
+    public bool IsCurrentlyDefending { get; private set; }
 
-    // 공격 타입을 정의하는 Enum
     public enum AttackType { None = 0, Q_Attack = 1, E_Kick = 2, R_Attack = 3 }
 
     void Awake()
     {
         animator = GetComponent<Animator>();
-        IsActionInProgress = false; // 초기 상태는 행동이 진행 중이 아님
+        IsActionInProgress = false;
+
+        // ※※※ 시작 시 콜라이더를 강제로 비활성화하는 코드를 제거하거나 주석 처리합니다. ※※※
+        // if (basicAttackColliderObject != null) basicAttackColliderObject.SetActive(false);
+        // if (kickAttackColliderObject != null) kickAttackColliderObject.SetActive(false);
+        // if (spinAttackColliderObject != null) spinAttackColliderObject.SetActive(false);
     }
-
-
-
-
-
 
     public void OnActionStart()
     {
-        IsActionInProgress = true; // 행동이 시작되면 true로 설정
+        IsActionInProgress = true;
     }
     public void OnActionEnd()
     {
-        IsActionInProgress = false; // 행동이 끝나면 false로 설정
+        IsActionInProgress = false;
     }
 
     public void StartDefense()
     {
-        IsCurrentlyDefending = true; // 방어 시작
+        IsCurrentlyDefending = true;
         animator.SetTrigger("startDefend");
     }
     public void StopDefense()
     {
-        IsCurrentlyDefending = false; // 방어 중지
+        IsCurrentlyDefending = false;
         animator.SetTrigger("endDefend");
     }
-
-    // --- 행동 실행을 위한 공개 함수들 ---
 
     public void StartAttack(AttackType attackType)
     {
@@ -52,9 +54,14 @@ public class PaladinActuator : MonoBehaviour
         {
             animator.SetTrigger("attackTrigger");
             animator.SetInteger("attackIndex", (int)attackType - 1);
+
+            // ※※※ 코루틴을 호출하여 콜라이더를 껐다 켜는 코드를 제거했습니다. ※※※
         }
     }
     
+    // ※※※ AttackColliderControlCoroutine 함수 전체를 삭제했습니다. ※※※
+
+
     public void SetDefend(bool isDefending)
     {
         animator.SetBool("isDefending", isDefending);
@@ -102,11 +109,8 @@ public class PaladinActuator : MonoBehaviour
         yield return new WaitForSeconds(duration);
         SetMovement(0);
         transform.rotation = originalRotation;
-
-        // 동작이 모두 끝났으므로, 약속했던 콜백 함수를 실행해서 알려줌
         onComplete?.Invoke();
     }
-
 
     public void ExecuteTimedDefense(float duration)
     {
@@ -115,17 +119,10 @@ public class PaladinActuator : MonoBehaviour
 
     private System.Collections.IEnumerator TimedDefenseCoroutine(float duration)
     {
-        OnActionStart(); // 행동 시작
-
-        // 1. 방어 시작 애니메이션을 발동시킴
+        OnActionStart();
         StartDefense();
-
-        // 2. 설정된 시간(duration) 만큼 기다림
         yield return new WaitForSeconds(duration);
-
-        // 3. 시간이 지나면 방어 해제 애니메이션을 발동시킴
         StopDefense();
-
-        OnActionEnd(); // 행동 종료
+        OnActionEnd();
     }
 }

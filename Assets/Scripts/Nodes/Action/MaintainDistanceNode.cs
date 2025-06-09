@@ -50,7 +50,6 @@ public class MaintainDistanceNode : Node
             Vector3 lookPosition = targetTransform.position - agentTransform.position;
             lookPosition.y = 0; // AI가 위아래로 기울지 않도록 함
             actuator.SetRotation(Quaternion.LookRotation(lookPosition));
-            Debug.Log("MaintainDistanceNode: 경로 수정!");
         }
 
         // 4. 움직임 제어: 거리에 따라 전진 또는 후진

@@ -3,16 +3,19 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - EnemyWeapon
+  - Sword
+  - Boundary
   layers:
-  - Default 
+  - Default
   - TransparentFX
   - Ignore Raycast
   - 
   - Water
   - UI
   - 
-  - 
+  - PT
   - 
   - 
   - 
