@@ -3549,6 +3549,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8863523281708738454}
     - target: {fileID: 5106011052024726042, guid: 9e5e83975a5d79d4691a710028cdcc21, type: 3}
+      propertyPath: spinAttackRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5106011052024726042, guid: 9e5e83975a5d79d4691a710028cdcc21, type: 3}
+      propertyPath: basicAttackRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5106011052024726042, guid: 9e5e83975a5d79d4691a710028cdcc21, type: 3}
       propertyPath: debugLogInterval
       value: 1
       objectReference: {fileID: 0}
@@ -3558,7 +3566,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5106011052024726042, guid: 9e5e83975a5d79d4691a710028cdcc21, type: 3}
       propertyPath: optimalCombatDistanceMax_Inspector
-      value: 1.2
+      value: 1.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5106011052024726042, guid: 9e5e83975a5d79d4691a710028cdcc21, type: 3}
+      propertyPath: optimalCombatDistanceMin_Inspector
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5126641173381157222, guid: 9e5e83975a5d79d4691a710028cdcc21, type: 3}
       propertyPath: m_Layer
@@ -4084,12 +4096,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4561918846771447373}
     - target: {fileID: 5005969469638681155, guid: d2b6009166011c94e8c2d84ca20928f1, type: 3}
+      propertyPath: spinAttackRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5005969469638681155, guid: d2b6009166011c94e8c2d84ca20928f1, type: 3}
+      propertyPath: basicAttackRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5005969469638681155, guid: d2b6009166011c94e8c2d84ca20928f1, type: 3}
       propertyPath: debugLogInterval
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5005969469638681155, guid: d2b6009166011c94e8c2d84ca20928f1, type: 3}
       propertyPath: opponentIdleStateName
       value: Movement
+      objectReference: {fileID: 0}
+    - target: {fileID: 5005969469638681155, guid: d2b6009166011c94e8c2d84ca20928f1, type: 3}
+      propertyPath: optimalCombatDistanceMax_Inspector
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5005969469638681155, guid: d2b6009166011c94e8c2d84ca20928f1, type: 3}
+      propertyPath: optimalCombatDistanceMin_Inspector
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5141537065081203588, guid: d2b6009166011c94e8c2d84ca20928f1, type: 3}
       propertyPath: m_Layer
