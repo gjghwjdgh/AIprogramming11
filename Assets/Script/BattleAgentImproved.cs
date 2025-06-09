@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using System.Collections;
 
 public class BattleAgentImproved : Agent
 {
@@ -16,14 +17,21 @@ public class BattleAgentImproved : Agent
     public bool isLeftAgent;
 
     private float currentHealth;
-    private bool isAttacking = false;
-    private bool isDefending = false;
 
-    private float attackCooldown = 2.5f;
+    // 1. 모든 행동을 제어할 단일 잠금 변수
+    private bool isActionLocked = false;
+
+    // 2. 각 스킬의 독립적인 쿨다운 변수들
+    [Header("Cooldowns")]
+    private float attack0_Cooldown = 2.5f;
+    private float attack1_Cooldown = 3.0f;
+    private float attack2_Cooldown = 4.0f;
     private float defendCooldown = 2.0f;
     private float dodgeCooldown = 4.0f;
 
-    private float attackTimer = 0f;
+    private float attack0_Timer = 0f;
+    private float attack1_Timer = 0f;
+    private float attack2_Timer = 0f;
     private float defendTimer = 0f;
     private float dodgeTimer = 0f;
 
@@ -43,19 +51,20 @@ public class BattleAgentImproved : Agent
     {
         currentHealth = maxHealth;
         stepCount = 0;
+        isActionLocked = false; // 에피소드 시작 시 잠금 해제
 
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-
-        isAttacking = false;
-        isDefending = false;
 
         animator.SetFloat("v", 0);
         animator.SetBool("isDefending", false);
 
         transform.position = new Vector3(Random.Range(-210f, -205f), 0f, Random.Range(-2f, 2f));
 
-        attackTimer = 0f;
+        // 모든 개별 타이머 초기화
+        attack0_Timer = 0f;
+        attack1_Timer = 0f;
+        attack2_Timer = 0f;
         defendTimer = 0f;
         dodgeTimer = 0f;
 
@@ -65,16 +74,20 @@ public class BattleAgentImproved : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(currentHealth / maxHealth);
-        sensor.AddObservation(attackTimer / attackCooldown);
-        sensor.AddObservation(defendTimer / defendCooldown);
-        sensor.AddObservation(dodgeTimer / dodgeCooldown);
+        // 총 관측값: 11개
+        sensor.AddObservation(currentHealth / maxHealth); // 1
+        sensor.AddObservation(isActionLocked);            // 2
+        sensor.AddObservation(attack0_Timer / attack0_Cooldown); // 3
+        sensor.AddObservation(attack1_Timer / attack1_Cooldown); // 4
+        sensor.AddObservation(attack2_Timer / attack2_Cooldown); // 5
+        sensor.AddObservation(defendTimer / defendCooldown); // 6
+        sensor.AddObservation(dodgeTimer / dodgeCooldown);   // 7
 
         if (enemy != null)
         {
             Vector3 relativePos = transform.InverseTransformPoint(enemy.position);
-            sensor.AddObservation(relativePos);
-            sensor.AddObservation(Vector3.Distance(transform.position, enemy.position) / 10f);
+            sensor.AddObservation(relativePos); // 8, 9, 10
+            sensor.AddObservation(Vector3.Distance(transform.position, enemy.position) / 10f); // 11
         }
         else
         {
@@ -87,20 +100,24 @@ public class BattleAgentImproved : Agent
     {
         stepCount++;
 
-        if (enemy != null && !isAttacking)
+        if (enemy != null && !isActionLocked)
         {
             Vector3 directionToEnemy = (enemy.position - transform.position).normalized;
             directionToEnemy.y = 0;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(directionToEnemy), Time.deltaTime * 5f);
         }
 
+        // 쿨다운 타이머들은 항상 감소
+        if (attack0_Timer > 0) attack0_Timer -= Time.deltaTime;
+        if (attack1_Timer > 0) attack1_Timer -= Time.deltaTime;
+        if (attack2_Timer > 0) attack2_Timer -= Time.deltaTime;
+        if (defendTimer > 0) defendTimer -= Time.deltaTime;
+        if (dodgeTimer > 0) dodgeTimer -= Time.deltaTime;
+
+        // 행동 잠금 상태에서는 아무것도 실행하지 않음
+        if (isActionLocked) return;
+
         int action = actions.DiscreteActions[0];
-
-        if (isAttacking) return;
-
-        attackTimer -= Time.deltaTime;
-        defendTimer -= Time.deltaTime;
-        dodgeTimer -= Time.deltaTime;
 
         switch (action)
         {
@@ -117,50 +134,33 @@ public class BattleAgentImproved : Agent
                 AddReward(0.005f);
                 break;
             case 3: // 공격 0
-                if (attackTimer <= 0f)
+                if (attack0_Timer <= 0f)
                 {
                     PerformAttack(AttackType.Attack0);
-                    attackTimer = attackCooldown;
-                }
-                else
-                {
-                    AddReward(-0.3f);
                 }
                 break;
             case 4: // 공격 1
-                if (attackTimer <= 0f)
+                if (attack1_Timer <= 0f)
                 {
                     PerformAttack(AttackType.Attack1);
-                    attackTimer = attackCooldown;
-                }
-                else
-                {
-                    AddReward(-0.3f);
                 }
                 break;
             case 5: // 공격 2
-                if (attackTimer <= 0f)
+                if (attack2_Timer <= 0f)
                 {
                     PerformAttack(AttackType.Attack2);
-                    attackTimer = attackCooldown;
-                }
-                else
-                {
-                    AddReward(-0.3f);
                 }
                 break;
-            case 6:
+            case 6: // 방어
                 if (defendTimer <= 0f)
                 {
                     PerformDefend();
-                    defendTimer = defendCooldown;
                 }
                 break;
-            case 7:
+            case 7: // 회피
                 if (dodgeTimer <= 0f)
                 {
                     PerformDodge();
-                    dodgeTimer = dodgeCooldown;
                 }
                 break;
         }
@@ -206,6 +206,7 @@ public class BattleAgentImproved : Agent
 
     private void Move(Vector3 direction)
     {
+        if (isActionLocked) return;
         Vector3 movement = transform.TransformDirection(direction) * moveSpeed * Time.deltaTime;
         rb.MovePosition(rb.position + movement);
         animator.SetFloat("v", direction.z);
@@ -213,22 +214,26 @@ public class BattleAgentImproved : Agent
 
     private void PerformAttack(AttackType type)
     {
-        isAttacking = true;
+        isActionLocked = true; // 행동 잠금
 
         int index = (int)type;
         animator.SetInteger("attackIndex", index);
         animator.SetTrigger("attackTrigger");
 
+        // 타입에 따라 각자 다른 쿨다운 타이머를 리셋하고 UI에 전달
         switch (type)
         {
             case AttackType.Attack0:
-                BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Attack1", attackCooldown);
+                attack0_Timer = attack0_Cooldown;
+                BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Attack1", attack0_Cooldown);
                 break;
             case AttackType.Attack1:
-                BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Attack2", attackCooldown);
+                attack1_Timer = attack1_Cooldown;
+                BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Attack2", attack1_Cooldown);
                 break;
             case AttackType.Attack2:
-                BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Attack3", attackCooldown);
+                attack2_Timer = attack2_Cooldown;
+                BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Attack3", attack2_Cooldown);
                 break;
         }
 
@@ -245,33 +250,30 @@ public class BattleAgentImproved : Agent
         {
             AddReward(-0.1f);
         }
-
-        Invoke(nameof(ResetAttackState), 1.0f);
     }
 
     private void PerformDefend()
     {
-        isDefending = true;
-        animator.SetBool("isDefending", true);
-        AddReward(+0.1f);
+        isActionLocked = true;
+        defendTimer = defendCooldown;
 
+        animator.SetBool("isDefending", true);
         BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Defend", defendCooldown);
-        Invoke(nameof(ResetDefendState), 1.0f);
     }
 
     private void PerformDodge()
     {
-        Debug.Log("회피 모션 시작됨!");
+        isActionLocked = true;
+        dodgeTimer = dodgeCooldown;
+
         animator.SetTrigger("dodgeTrigger");
         rb.MovePosition(rb.position + transform.right * -1.5f);
-        AddReward(-0.05f);
-
         BattleUIController.Instance?.TriggerCooldown(isLeftAgent, "Dodge", dodgeCooldown);
     }
 
     public void TakeDamage(float amount)
     {
-        if (isDefending)
+        if (animator.GetBool("isDefending"))
         {
             AddReward(+0.5f);
             return;
@@ -296,12 +298,13 @@ public class BattleAgentImproved : Agent
         }
     }
 
-    private void ResetAttackState() => isAttacking = false;
-
-    private void ResetDefendState()
+    public void ReleaseActionLock()
     {
-        isDefending = false;
-        animator.SetBool("isDefending", false);
+        isActionLocked = false;
+        if (animator.GetBool("isDefending"))
+        {
+            animator.SetBool("isDefending", false);
+        }
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -311,10 +314,10 @@ public class BattleAgentImproved : Agent
 
         if (Input.GetKey(KeyCode.W)) da[0] = 1;
         else if (Input.GetKey(KeyCode.S)) da[0] = 2;
-        else if (Input.GetKey(KeyCode.Q)) da[0] = 3; // 공격0
-        else if (Input.GetKey(KeyCode.E)) da[0] = 4; // 공격1
-        else if (Input.GetKey(KeyCode.R)) da[0] = 5; // 공격2
-        else if (Input.GetKey(KeyCode.LeftShift)) da[0] = 6; // 방어
-        else if (Input.GetKey(KeyCode.Space)) da[0] = 7; // 회피
+        else if (Input.GetKey(KeyCode.Q)) da[0] = 3;
+        else if (Input.GetKey(KeyCode.E)) da[0] = 4;
+        else if (Input.GetKey(KeyCode.R)) da[0] = 5;
+        else if (Input.GetKey(KeyCode.LeftShift)) da[0] = 6;
+        else if (Input.GetKey(KeyCode.Space)) da[0] = 7;
     }
 }
