@@ -15,18 +15,22 @@ public class MLtest2 : Agent
 
     Rigidbody rBody;
 
+    // --- [추가] 행동 잠금을 위한 전역 변수 ---
+    private bool isActionLocked = false; // 에이전트의 모든 행동이 잠겼는지 확인
+    private float actionLockTimer = 0f;  // 남은 잠금 시간
+
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var discreteActions = actionsOut.DiscreteActions;
         discreteActions[0] = 0;
 
-        if (Input.GetKey(KeyCode.I)) discreteActions[0] = 1;
-        else if (Input.GetKey(KeyCode.K)) discreteActions[0] = 2;
-        else if (Input.GetKey(KeyCode.J)) discreteActions[0] = 3;
-        else if (Input.GetKey(KeyCode.U)) discreteActions[0] = 4;
-        else if (Input.GetKey(KeyCode.O)) discreteActions[0] = 5;
-        else if (Input.GetKey(KeyCode.P)) discreteActions[0] = 6;
-        else if (Input.GetKey(KeyCode.RightShift)) discreteActions[0] = 7;
+        if (Input.GetKey(KeyCode.I)) discreteActions[0] = 1;      // Forward
+        else if (Input.GetKey(KeyCode.K)) discreteActions[0] = 2; // Backward
+        else if (Input.GetKey(KeyCode.J)) discreteActions[0] = 3; // Dodge (원래는 L키였으나 J로 가정)
+        else if (Input.GetKey(KeyCode.U)) discreteActions[0] = 4; // Q_Attack
+        else if (Input.GetKey(KeyCode.O)) discreteActions[0] = 5; // E_Kick
+        else if (Input.GetKey(KeyCode.P)) discreteActions[0] = 6; // R_Attack
+        else if (Input.GetKey(KeyCode.RightShift)) discreteActions[0] = 7; // Defend
     }
 
     Vector3 lastSwordVelocity;
@@ -57,6 +61,7 @@ public class MLtest2 : Agent
     float episodeTimer = 0f;
     float maxEpisodeTime = 40f;
 
+    // --- [수정] Update 메서드에 전역 쿨다운 타이머 로직 추가 ---
     void Update()
     {
         episodeTimer += Time.deltaTime;
@@ -64,11 +69,17 @@ public class MLtest2 : Agent
         {
             Debug.LogWarning("에피소드가 너무 오래 걸려 강제 종료!");
             EndEpisode();
-            episodeTimer = 0f;
         }
 
-        // 잠금 해제용 시간 갱신
-        UpdateLocks();
+        // 행동 잠금 타이머가 활성화 되어있으면 시간을 감소시킴
+        if (isActionLocked)
+        {
+            actionLockTimer -= Time.deltaTime;
+            if (actionLockTimer <= 0)
+            {
+                isActionLocked = false; // 시간이 다 되면 잠금 해제
+            }
+        }
     }
 
     public override void OnEpisodeBegin()
@@ -77,12 +88,16 @@ public class MLtest2 : Agent
         targetHealth = 100f;
         episodeTimer = 0f;
 
-        TestUIController.Instance.SetLeftHealth(agentHealth, 100f);
-        TestUIController.Instance.SetRightHealth(targetHealth, 100f);
+        // 에피소드 시작 시 행동 잠금 상태 초기화
+        isActionLocked = false;
+        actionLockTimer = 0f;
 
-        Vector3 startPosition = new Vector3(-213.0f, 0.0f, -0.1f);
-        this.transform.localPosition = startPosition;
+        // UI 체력 설정
+        TestUIController.Instance.SetRightHealth(agentHealth, 100f); // MLtest2는 오른쪽 UI를 사용한다고 가정
+        TestUIController.Instance.SetLeftHealth(targetHealth, 100f);
 
+        // 위치 설정
+        this.transform.localPosition = new Vector3(-213.0f, 0.0f, -0.1f);
         Target.localPosition = new Vector3(-216.0f, 0.0f, -0.1f);
     }
 
@@ -106,26 +121,24 @@ public class MLtest2 : Agent
 
     public float forceMultiplier = 10f;
 
-    // 🔒 잠금 관련 변수
-    private float dodgeLockTime = 0f;
-    private float qAttackLockTime = 0f;
-    private float eKickLockTime = 0f;
-    private float rAttackLockTime = 0f;
-    private float defendLockTime = 0f;
+    // --- [삭제] 개별 잠금 변수 및 관련 로직은 삭제됨 ---
 
-    private float lockDuration = 1.0f;
-
-    private void UpdateLocks()
+    // --- [추가] 행동을 잠그는 헬퍼 메서드 ---
+    private void LockAction(float duration)
     {
-        dodgeLockTime -= Time.deltaTime;
-        qAttackLockTime -= Time.deltaTime;
-        eKickLockTime -= Time.deltaTime;
-        rAttackLockTime -= Time.deltaTime;
-        defendLockTime -= Time.deltaTime;
+        isActionLocked = true;
+        actionLockTimer = duration;
     }
 
+    // --- [수정] OnActionReceived에 전역 잠금 로직 적용 ---
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
+        // 행동이 잠겨있으면, 이후 로직을 실행하지 않고 즉시 종료
+        if (isActionLocked)
+        {
+            return;
+        }
+
         int discreteAction = actionBuffers.DiscreteActions[0];
         float distanceToTarget = Vector3.Distance(transform.localPosition, Target.localPosition);
 
@@ -152,55 +165,41 @@ public class MLtest2 : Agent
                 AddReward(0.05f);
                 break;
             case 3: // Dodge
-                if (dodgeLockTime <= 0f)
-                {
-                    rootMotionMover.Dodge();
-                    TestUIController.Instance.rightDodge.TriggerCooldown();
-                    dodgeLockTime = lockDuration;
-                }
+                rootMotionMover.Dodge();
+                TestUIController.Instance.rightDodge.TriggerCooldown();
+                LockAction(1.5f); // 1.5초간 모든 행동 잠금
                 break;
             case 4: // Q_Attack
-                if (qAttackLockTime <= 0f)
-                {
-                    rootMotionMover.StartAttack(RootMotionMover.AttackType.Q_Attack);
-                    TestUIController.Instance.rightAttack.TriggerCooldown();
-                    qAttackLockTime = lockDuration;
+                rootMotionMover.StartAttack(RootMotionMover.AttackType.Q_Attack);
+                TestUIController.Instance.rightAttack.TriggerCooldown();
+                LockAction(2.0f); // 2초간 모든 행동 잠금
 
-                    if (distanceToTarget < 4.0f)
-                        AddReward(opponentIsAttacking ? 0.05f : -0.05f);
-                }
+                if (distanceToTarget < 4.0f)
+                    AddReward(opponentIsAttacking ? 0.05f : -0.05f);
                 break;
             case 5: // E_Kick
-                if (eKickLockTime <= 0f)
-                {
-                    rootMotionMover.StartAttack(RootMotionMover.AttackType.E_Kick);
-                    TestUIController.Instance.rightAttack.TriggerCooldown();
-                    eKickLockTime = lockDuration;
+                rootMotionMover.StartAttack(RootMotionMover.AttackType.E_Kick);
+                TestUIController.Instance.rightAttack.TriggerCooldown();
+                LockAction(2.0f); // 2초간 모든 행동 잠금
 
-                    if (distanceToTarget < 4.0f)
-                        AddReward(opponentIsAttacking ? 0.05f : -0.05f);
-                }
+                if (distanceToTarget < 4.0f)
+                    AddReward(opponentIsAttacking ? 0.05f : -0.05f);
                 break;
             case 6: // R_Attack
-                if (rAttackLockTime <= 0f)
-                {
-                    rootMotionMover.StartAttack(RootMotionMover.AttackType.R_Attack);
-                    TestUIController.Instance.rightAttack.TriggerCooldown();
-                    rAttackLockTime = lockDuration;
+                rootMotionMover.StartAttack(RootMotionMover.AttackType.R_Attack);
+                TestUIController.Instance.rightAttack.TriggerCooldown();
+                LockAction(2.5f); // 2.5초간 모든 행동 잠금
 
-                    if (distanceToTarget < 4.0f)
-                        AddReward(opponentIsAttacking ? 0.05f : -0.05f);
-                }
+                if (distanceToTarget < 4.0f)
+                    AddReward(opponentIsAttacking ? 0.05f : -0.05f);
                 break;
             case 7: // Defend
-                if (defendLockTime <= 0f)
-                {
-                    bool isDefending = Input.GetKey(KeyCode.RightShift);
-                    rootMotionMover.SetDefend(isDefending);
-                    TestUIController.Instance.rightDefend.TriggerCooldown();
-                    Debug.Log("방어 상태: " + isDefending);
-                    defendLockTime = lockDuration;
-                }
+                // Defend는 키를 누르고 있는 동안 지속되어야 하므로, Lock을 걸지 않는 것이 일반적입니다.
+                // 만약 방어 시작 시 쿨타임을 원한다면 여기에 LockAction()을 추가할 수 있습니다.
+                bool isDefending = Input.GetKey(KeyCode.RightShift);
+                rootMotionMover.SetDefend(isDefending);
+                TestUIController.Instance.rightDefend.TriggerCooldown();
+                Debug.Log("방어 상태: " + isDefending);
                 break;
         }
 
@@ -219,6 +218,7 @@ public class MLtest2 : Agent
     public void TakeDamage(float damage)
     {
         agentHealth -= damage;
+        TestUIController.Instance.SetRightHealth(agentHealth, 100f); // UI 업데이트
         if (agentHealth <= 0f)
         {
             SetReward(-1.0f);
