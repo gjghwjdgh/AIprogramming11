@@ -102,8 +102,9 @@ public class Shield : MonoBehaviour
     {
         if (isShieldActive && other.CompareTag("Sword"))
         {
-            Rigidbody swordRb = other.GetComponent<Rigidbody>();
-            float attackAccel = swordRb != null ? swordRb.linearVelocity.magnitude : 0f;
+            // Sword에서 직접 계산한 가속도를 받아오기!
+            Sword swordScript = other.GetComponent<Sword>();
+            float attackAccel = (swordScript != null) ? swordScript.acceleration.magnitude : 0f;
 
             // ML-Agent에게 방어 성공 보상!
             mlAgent.OnDefendSuccess(attackAccel);

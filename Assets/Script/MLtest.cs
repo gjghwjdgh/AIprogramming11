@@ -6,6 +6,8 @@ using Unity.MLAgents.Actuators;
 
 using Unity.MLAgents.Sensors;
 
+using System.IO;
+
 
 
 
@@ -19,6 +21,8 @@ public class MLtest : Agent
 
     public float agentHealth = 100f;
     public float targetHealth = 100f;
+
+
 
 
    // public float lastAttackDamage = 0f;
@@ -83,7 +87,7 @@ public class MLtest : Agent
 
     //업데이트 함수- 에피소드 강제 종료
     float episodeTimer = 0f;
-    float maxEpisodeTime = 40f;
+    float maxEpisodeTime = 50f;
 
     void Update()
     {
@@ -206,19 +210,12 @@ public class MLtest : Agent
             AddReward(0.03f); // 가까우면 보상
         }
 
-        //// 가까워질수록 +보상
-        //float closeReward = 1.0f - Mathf.Clamp01(distanceToTarget / 10.0f); // 10단위 정규화
-        //AddReward(closeReward * 0.5f);  // 0.01은 가중치
-
         //// 너무 멀어지면 패널티
         if (distanceToTarget > 5.0f)
         {
             AddReward(-0.05f); // 페널티도 고려
         }
-        // 기본적으로 항상 방어 해제
-        //bool isDefending = false;
-        //// 기본적으로 항상 방어자세 해제
-        //rootMotionMover.SetDefend(false);
+
 
         // 상대의 RootMotionMover 가져오기
         RootMotionMover opponentRootMotion = null;
@@ -292,60 +289,6 @@ public class MLtest : Agent
     }
 
 
-    //public override void OnActionReceived(ActionBuffers actionBuffers)
-    //{
-    //    int discreteAction = actionBuffers.DiscreteActions[0];
-
-    //    // 기본적으로 v=0으로 초기화
-    //    rootMotionMover.animator.SetFloat("v", 0.0f);
-
-    //    switch (discreteAction)
-    //    {
-    //        case 0: // Idle
-    //            AddReward(-0.01f); // 가만히 있으면 작은 패널티
-    //            break;
-    //        case 1: // Move Forward
-    //            rBody.AddForce(transform.forward * forceMultiplier);
-    //            rootMotionMover.animator.SetFloat("v", 1.0f);
-    //            AddReward(0.01f); // 이동하면 소량 보상
-    //            break;
-    //        case 2: // Move Backward
-    //            rBody.AddForce(-transform.forward * forceMultiplier);
-    //            rootMotionMover.animator.SetFloat("v", -1.0f);
-    //            AddReward(0.01f);
-    //            break;
-    //        case 3: // Dodge
-    //            rootMotionMover.Dodge();
-    //            break;
-    //        case 4: // Q_Attack
-    //            rootMotionMover.StartAttack(RootMotionMover.AttackType.Q_Attack);
-    //            break;
-    //        case 5: // E_Kick
-    //            rootMotionMover.StartAttack(RootMotionMover.AttackType.E_Kick);
-    //            break;
-    //        case 6: // R_Attack
-    //            rootMotionMover.StartAttack(RootMotionMover.AttackType.R_Attack);
-    //            break;
-    //        case 7: // Defend
-    //            rootMotionMover.SetDefend(true);
-    //            break;
-    //    }
-
-    //    // Agent나 Target이 죽으면 에피소드 종료
-    //    if (targetHealth <= 0f)
-    //    {
-    //        float healthRatio = agentHealth / 100f;
-    //        SetReward(1.0f + healthRatio);
-    //        EndEpisode();
-    //    }
-    //    else if (agentHealth <= 0f)
-    //    {
-    //        SetReward(-1.0f);
-    //        EndEpisode();
-    //    }
-    //}
-
-    //public float lastAttackDamage = 0f;
 
     public void TakeDamage(float damage)
     {

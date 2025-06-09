@@ -85,7 +85,7 @@ public class MLtest2 : Agent
 
     //업데이트 함수- 에피소드 강제 종료
     float episodeTimer = 0f;
-    float maxEpisodeTime = 40f;
+    float maxEpisodeTime = 50f;
 
     void Update()
     {
@@ -152,41 +152,7 @@ public class MLtest2 : Agent
     }
 
 
-    // ... 기존 변수 및 메서드 ...
 
-    //public void OnDefendSuccess(float attackAccel)
-    //{
-    //    float baseReward = 0.05f;
-
-    //    if (attackAccel >= 5f)
-    //    {
-    //        float scaledReward = baseReward * (attackAccel / 5f);
-    //        AddReward(scaledReward);
-    //        Debug.Log($"방어 성공! 공격 가속도: {attackAccel}, 보상: {scaledReward}");
-    //    }
-    //    else
-    //    {
-    //        AddReward(baseReward);
-    //        Debug.Log($"방어 성공! 기본 보상만 지급: {baseReward}");
-    //    }
-    //}
-
-    //public void OnDodgeSuccess(float attackAccel)
-    //{
-    //    float baseReward = 0.05f;
-
-    //    if (attackAccel >= 5f)
-    //    {
-    //        float scaledReward = baseReward * (attackAccel / 5f);
-    //        AddReward(scaledReward);
-    //        Debug.Log($"회피 성공! 공격 가속도: {attackAccel}, 보상: {scaledReward}");
-    //    }
-    //    else
-    //    {
-    //        AddReward(baseReward);
-    //        Debug.Log($"회피 성공! 기본 보상만 지급: {baseReward}");
-    //    }
-    //}
 
 
 
@@ -331,58 +297,6 @@ public class MLtest2 : Agent
 
 
 
-    //public override void OnActionReceived(ActionBuffers actionBuffers)
-    //{
-    //    int discreteAction = actionBuffers.DiscreteActions[0];
-
-    //    // 기본적으로 v=0으로 초기화
-    //    rootMotionMover.animator.SetFloat("v", 0.0f);
-
-    //    switch (discreteAction)
-    //    {
-    //        case 0: // Idle
-    //            AddReward(-0.01f); // 가만히 있으면 작은 패널티
-    //            break;
-    //        case 1: // Move Forward
-    //            rBody.AddForce(transform.forward * forceMultiplier);
-    //            rootMotionMover.animator.SetFloat("v", 1.0f);
-    //            AddReward(0.01f); // 이동하면 소량 보상
-    //            break;
-    //        case 2: // Move Backward
-    //            rBody.AddForce(-transform.forward * forceMultiplier);
-    //            rootMotionMover.animator.SetFloat("v", -1.0f);
-    //            AddReward(0.01f);
-    //            break;
-    //        case 3: // Dodge
-    //            rootMotionMover.Dodge();
-    //            break;
-    //        case 4: // Q_Attack
-    //            rootMotionMover.StartAttack(RootMotionMover.AttackType.Q_Attack);
-    //            break;
-    //        case 5: // E_Kick
-    //            rootMotionMover.StartAttack(RootMotionMover.AttackType.E_Kick);
-    //            break;
-    //        case 6: // R_Attack
-    //            rootMotionMover.StartAttack(RootMotionMover.AttackType.R_Attack);
-    //            break;
-    //        case 7: // Defend
-    //            rootMotionMover.SetDefend(true);
-    //            break;
-    //    }
-
-    //    // Agent나 Target이 죽으면 에피소드 종료
-    //    if (targetHealth <= 0f)
-    //    {
-    //        float healthRatio = agentHealth / 100f;
-    //        SetReward(1.0f + healthRatio);
-    //        EndEpisode();
-    //    }
-    //    else if (agentHealth <= 0f)
-    //    {
-    //        SetReward(-1.0f);
-    //        EndEpisode();
-    //    }
-    //}
 
    
 
@@ -401,20 +315,6 @@ public class MLtest2 : Agent
     }
 
 
-
-    // MLtest.cs (내 Agent)
-    //void ObserveOpponentDamage()
-    //{
-    //    Character opponent = Target.GetComponent<Character>();
-    //    if (opponent != null)
-    //    {
-    //        opponentLastDamage = opponent.lastAttackDamage;
-    //        Debug.Log("상대의 마지막 받은 데미지: " + opponentLastDamage);
-    //        // 상대가 받은 데미지를 관찰값으로 추가!
-    //        // sensor.AddObservation(opponentLastDamage);
-    //        // 또는 보상 계산에 활용
-    //    }
-    //}
 
     public void OnSuccessfulAttack(float damageDefault)
     {

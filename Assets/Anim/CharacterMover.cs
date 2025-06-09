@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.IO;
 
 public class RootMotionMover : MonoBehaviour
 {
@@ -228,6 +229,13 @@ public class RootMotionMover : MonoBehaviour
         
         animator.SetBool("isDefending", isDefending);
         Debug.Log("SetDefend 호출됨: " + isDefending);  // 상태 확인
+
+        string path = "Assets/Results/agent_stats2.csv";
+        using (StreamWriter sw = new StreamWriter(path, true))
+        {
+            string line = $"{Time.time},{isDefending}";
+            sw.WriteLine(line);
+        }
     }
 
     public void Dodge()
