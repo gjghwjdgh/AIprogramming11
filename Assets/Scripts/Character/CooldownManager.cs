@@ -42,4 +42,32 @@ public class CooldownManager : MonoBehaviour
         // 그 외의 경우는 아직 쿨타임 진행 중
         return false;
     }
+
+
+
+    // CooldownManager.cs 에 추가할 함수 예시
+    public float GetRemainingCooldown(string skillName)
+    {
+        if (skillCooldownEndTime.ContainsKey(skillName))
+        {
+            float remaining = skillCooldownEndTime[skillName] - Time.time;
+            return remaining > 0 ? remaining : 0;
+        }
+        return 0;
+    }
+
+    public float GetTotalCooldown(string skillName)
+    {
+        // 이 부분은 각 스킬의 전체 쿨타임 값을 저장해두고 반환해야 합니다.
+        // 예를 들어, 딕셔너리를 하나 더 만들거나 switch-case 문을 사용할 수 있습니다.
+        switch(skillName)
+        {
+            case "BasicAttack": return 6f;
+            case "KickAttack": return 15f;
+            case "SpinAttack": return 30f;
+            case "Defend": return 10f;
+            case "Evade": return 5f;
+            default: return 0f;
+        }
+    }
 }

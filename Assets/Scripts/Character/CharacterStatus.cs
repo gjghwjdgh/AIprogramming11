@@ -1,52 +1,64 @@
+// CharacterStatus.cs (수정된 최종 버전)
 using UnityEngine;
+using UnityEngine.UI; // ★★★ UI 네임스페이스를 사용하기 위해 반드시 추가! ★★★
 
 public class CharacterStatus : MonoBehaviour
 {
-    // 캐릭터의 최대 체력과 현재 체력
     public float maxHealth = 100f;
     public float currentHealth;
     
-    // public bool didJustDefend = false; // <-- 이 줄은 PaladinActuator를 직접 참조하므로 필요 없어져서 삭제합니다.
+    public Slider healthSlider; // ★★★ 체력 바 UI 슬라이더를 연결할 변수 추가 ★★★
 
-    private PaladinActuator actuator; // ★★★ PaladinActuator를 참조할 변수를 추가합니다.
+    private PaladinActuator actuator;
 
     void Awake()
     {
-        // 게임이 시작되면 현재 체력을 최대 체력으로 설정
         currentHealth = maxHealth;
-
-        // ★★★ PaladinActuator 컴포넌트를 찾아서 변수에 할당합니다.
         actuator = GetComponent<PaladinActuator>();
     }
 
-    // 데미지를 받는 함수 (다른 스크립트에서 호출할 수 있음)
+    // ★★★ Start 함수를 추가하여 게임 시작 시 UI를 한번 업데이트합니다. ★★★
+    void Start()
+    {
+        UpdateHealthUI();
+    }
+
     public void TakeDamage(float damage)
     {
-        // ★★★ 데미지를 받기 전에, 방어 상태인지 먼저 확인합니다. ★★★
         if (actuator != null && actuator.IsCurrentlyDefending)
         {
-            // 방어 중이라면 데미지를 무시하고 함수를 종료합니다.
             Debug.Log(gameObject.name + " defended the attack!");
             return; 
         }
 
-        // --- 방어 중이 아닐 때만 아래의 데미지 처리 코드가 실행됩니다. ---
         currentHealth -= damage;
         if (currentHealth < 0)
         {
             currentHealth = 0;
         }
-        // 데미지 받았을 때의 로그 (디버깅용)
         Debug.Log(gameObject.name + " took " + damage + " damage. Current health: " + currentHealth);
+        
+        UpdateHealthUI(); // ★★★ 데미지를 받을 때마다 UI 업데이트 함수 호출 ★★★
     }
 
-    // 체력을 회복하는 함수 (필요 시 사용)
     public void Heal(float amount)
     {
         currentHealth += amount;
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
+        }
+
+        UpdateHealthUI(); // ★★★ 회복할 때마다 UI 업데이트 함수 호출 ★★★
+    }
+
+    // ★★★ 체력 UI를 업데이트하는 함수 ★★★
+    void UpdateHealthUI()
+    {
+        if (healthSlider != null)
+        {
+            // 슬라이더의 값(0~1)을 현재 체력 비율에 맞게 계산하여 업데이트합니다.
+            healthSlider.value = currentHealth / maxHealth;
         }
     }
 }
