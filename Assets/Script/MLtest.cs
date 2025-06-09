@@ -249,23 +249,27 @@ public class MLtest : Agent
                 break;
             case 3:
                 rootMotionMover.Dodge();
-                
-                    AddReward(0.05f);
+                TestUIController.Instance.leftDodge.TriggerCooldown();
+                AddReward(0.05f);
                 
                     break;
             case 4:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.Q_Attack);
+                TestUIController.Instance.leftAttack.TriggerCooldown();
 
                 break;
             case 5:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.E_Kick);
+                TestUIController.Instance.leftAttack.TriggerCooldown();
                 break;
             case 6:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.R_Attack);
+                TestUIController.Instance.leftAttack.TriggerCooldown();
                 break;
             case 7:
                 bool isDefending = Input.GetKey(KeyCode.LeftShift); // 입력 체크!
                 rootMotionMover.SetDefend(isDefending); // 입력 상태 그대로 방어 상태에 반영
+                TestUIController.Instance.leftDefend.TriggerCooldown();
                 Debug.Log("방어 상태: " + isDefending);
                 
                     AddReward(0.05f);
