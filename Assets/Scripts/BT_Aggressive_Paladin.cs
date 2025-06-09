@@ -58,8 +58,27 @@ public class BT_Aggressive_Paladin : BT_Brain
                 new Sequence(new List<Node> { new IsHealthLowNode(transform, 0f), new ActionLoggerNode(this, "사망", new DieNode(transform)) }),
                 new Sequence(new List<Node>
                 {
+                    // 1. 적이 치명타 공격을 사용하는지 확인
                     new IsEnemyCritAttackDetectedNode(targetAnimator, criticalAttackStateName),
-                    new ActionLoggerNode(this, "치명타 회피", new EvadeNode(transform, "Backward"))
+
+                    // 2. 방어 또는 회피 중 가능한 것을 선택
+                    new Selector(new List<Node>
+                    {
+                        // 2-1. (플랜 A) 방어를 먼저 시도
+                        new Sequence(new List<Node>
+                        {
+                            new IsCooldownCompleteNode(transform, "Defend"),
+                            // TimedDefendNode를 사용해 일정 시간 방어를 유지하도록 합니다.
+                            new ActionLoggerNode(this, "치명타 방어", new TimedDefendNode(transform, 1.5f)) 
+                        }),
+
+                        // 2-2. (플랜 B) 방어가 쿨타임이면 -> 회피 시도
+                        new Sequence(new List<Node>
+                        {
+                            new IsCooldownCompleteNode(transform, "Evade"),
+                            new ActionLoggerNode(this, "치명타 회피 (차선책)", new EvadeNode(transform, "Backward"))
+                        })
+                    })
                 })
             }),
 
