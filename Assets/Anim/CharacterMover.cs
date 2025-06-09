@@ -7,6 +7,7 @@ public class RootMotionMover : MonoBehaviour
     public TrailRenderer swordTrail;
 
     public bool isDodgging = false;
+    public bool isDefending = false;
 
     public enum AttackType { Q_Attack = 0, E_Kick = 1, R_Attack = 2 }
     private AttackType currentAttackType;
@@ -16,7 +17,7 @@ public class RootMotionMover : MonoBehaviour
     public float qAttackTrailDelay = 0.05f;
     public float rAttackTrailDelay = 0.1f;
 
-    private bool isAttacking = false;
+    public bool isAttacking = false;
 
     public SoundManager soundManager;
     public AudioClip qAttackSfx;
@@ -27,11 +28,19 @@ public class RootMotionMover : MonoBehaviour
 
     private Rigidbody rBody;
 
+    
+
+
+
+
+
     void Start()
     {
         animator = GetComponent<Animator>();
         rBody = GetComponent<Rigidbody>();
         animator.applyRootMotion = true;
+
+
 
 
         if (swordTrail != null)
@@ -216,12 +225,14 @@ public class RootMotionMover : MonoBehaviour
 
     public void SetDefend(bool isDefending)
     {
+        
         animator.SetBool("isDefending", isDefending);
+        Debug.Log("SetDefend 호출됨: " + isDefending);  // 상태 확인
     }
 
     public void Dodge()
     {
-        //if (isDodgging) return;  // 중복 방지
+        if (isDodgging) return;  // 중복 방지
 
         animator.SetTrigger("dodgeTrigger");
         isDodgging = true;

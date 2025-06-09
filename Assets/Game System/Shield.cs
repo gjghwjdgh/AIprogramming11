@@ -96,6 +96,8 @@ public class Shield : MonoBehaviour
     public bool isShieldActive = false;
     public MLtest mlAgent; // MLtest 스크립트 연결
 
+
+
     void OnTriggerEnter(Collider other)
     {
         if (isShieldActive && other.CompareTag("Sword"))
@@ -108,6 +110,8 @@ public class Shield : MonoBehaviour
             Debug.Log("방어 성공! 가속도: " + attackAccel);
         }
     }
+
+
 
     // 방어 상태를 켜거나 끄는 함수
     public void ActivateShield()
