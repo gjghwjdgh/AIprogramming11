@@ -706,11 +706,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: safeCombatDistanceMax_Inspector
-      value: 25
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: safeCombatDistanceMin_Inspector
-      value: 20
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 2015630205335789409, guid: 37f5fe87201dadb478055ce46f98f1d3, type: 3}
       propertyPath: optimalCombatDistanceMax_Inspector
