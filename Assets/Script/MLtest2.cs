@@ -83,24 +83,41 @@ public class MLtest2 : Agent
     }
     public Transform Target;
 
+    //업데이트 함수- 에피소드 강제 종료
+    float episodeTimer = 0f;
+    float maxEpisodeTime = 40f;
+
+    void Update()
+    {
+        episodeTimer += Time.deltaTime;
+        if (episodeTimer > maxEpisodeTime)
+        {
+            Debug.LogWarning("에피소드가 너무 오래 걸려 강제 종료!");
+            EndEpisode();
+            episodeTimer = 0f;
+        }
+    }
+
+
     public override void OnEpisodeBegin()
     {
 
         agentHealth = 100f;
         targetHealth = 100f;
+        episodeTimer = 0f;
 
         //// UI 업데이트
-        //TestUIController.Instance.SetLeftHealth(agentHealth, 100f);
-        //TestUIController.Instance.SetRightHealth(targetHealth, 100f);
+        TestUIController.Instance.SetLeftHealth(agentHealth, 100f);
+        TestUIController.Instance.SetRightHealth(targetHealth, 100f);
 
         // 중력 작용 직전에 정확히 바닥 위로 보정
-        Vector3 startPosition = new Vector3(-214.0f, 0.0f, 5.0f);
+        Vector3 startPosition = new Vector3(-213.0f, 0.0f, -0.1f);
         this.transform.localPosition = startPosition;
 
         //this.rBody.linearVelocity = Vector3.zero;
         //this.rBody.angularVelocity = Vector3.zero;
 
-        Target.localPosition = new Vector3(-217.8f, 0.0f, 5.0f);
+        Target.localPosition = new Vector3(-216.0f, 0.0f, -0.1f);
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -183,9 +200,14 @@ public class MLtest2 : Agent
 
         float distanceToTarget = Vector3.Distance(transform.localPosition, Target.localPosition);
 
-        if (distanceToTarget < 4.0f)
+        if (distanceToTarget < 4.0f && discreteAction == 1)
         {
-            AddReward(0.3f); // 가까우면 보상
+            AddReward(0.03f); // 가까우면 보상
+        }
+        //// 너무 멀어지면 패널티
+        if (distanceToTarget > 5.0f)
+        {
+            AddReward(-0.05f); // 페널티도 고려
         }
 
         //// 가까워질수록 +보상
@@ -225,47 +247,61 @@ public class MLtest2 : Agent
                 break;
             case 1:
                 rootMotionMover.animator.SetFloat("v", 1.0f);
-                AddReward(0.2f);
+ 
+                AddReward(0.05f);
                 break;
             case 2:
                 rootMotionMover.animator.SetFloat("v", -2.0f);
-                AddReward(0.1f);
+ 
+
+                AddReward(0.05f);
                 break;
             case 3:
                 rootMotionMover.Dodge();
+
                 break;
             case 4:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.Q_Attack);
-                if (opponentIsAttacking)
+                if (distanceToTarget < 4.0f)
                 {
-                    AddReward(0.1f);
+                    if (opponentIsAttacking)
+                    {
+                        AddReward(0.05f);
+                    }
+                    else
+                    {
+                        AddReward(-0.05f);
+                    }
                 }
-                else
-                {
-                    AddReward(-0.1f);
-                }
+
                 break;
             case 5:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.E_Kick);
-                if (opponentIsAttacking)
+                if (distanceToTarget < 4.0f)
                 {
-                    AddReward(0.1f);
-                }
-                else
-                {
-                    AddReward(-0.1f);
+                    if (opponentIsAttacking)
+                    {
+                        AddReward(0.05f);
+                    }
+                    else
+                    {
+                        AddReward(-0.05f);
+                    }
                 }
 
                 break;
             case 6:
                 rootMotionMover.StartAttack(RootMotionMover.AttackType.R_Attack);
-                if (opponentIsAttacking)
+                if (distanceToTarget < 4.0f)
                 {
-                    AddReward(0.1f);
-                }
-                else
-                {
-                    AddReward(-0.1f);
+                    if (opponentIsAttacking)
+                    {
+                        AddReward(0.05f);
+                    }
+                    else
+                    {
+                        AddReward(-0.05f);
+                    }
                 }
 
                 break;
@@ -399,6 +435,17 @@ public class MLtest2 : Agent
     {
         AddReward(0.2f + damageDefault * 0.01f);
     }
+
+    //Agent.cs 등에서 직접 추가
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Boundary"))
+        {
+            Debug.Log("Boundary 충돌: 음의 보상 주기");
+            AddReward(-0.07f);  // 보상은 필요에 따라 조정
+        }
+    }
+
 
 }
 
