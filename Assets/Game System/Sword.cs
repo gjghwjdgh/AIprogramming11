@@ -1,99 +1,40 @@
-﻿using UnityEngine;
+﻿// 파일 이름: Sword.cs (최종 버전)
+using UnityEngine;
 
 public class Sword : MonoBehaviour
 {
-    public float damage = 10f;
-    public GameObject owner;
-
-    private Vector3 lastPosition;
-    public Vector3 velocity { get; private set; }
-    public Vector3 acceleration { get; private set; }
-
-
-    void Start()
-    {
-        // 만약 owner가 안 지정되면, 자동으로 루트 오브젝트를 owner로 지정
-        if (owner == null)
-        {
-            owner = transform.root.gameObject;
-            Debug.Log($"Sword owner가 자동으로 할당되었습니다: {owner.name}");
-        }
-    }
+    public GameObject owner; // 칼의 주인 (공격 에이전트)
+    public float damageAmount = 20.0f;
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Sword 충돌됨! other = " + other.name);
-
-        // 방패 충돌 체크
-        Shield shield = other.GetComponent<Shield>();
-        if (shield != null && shield.isShieldActive)
+        // 자기 자신이나 경계선과 부딪히면 무시
+        if (other.gameObject == owner || other.CompareTag("Boundary"))
         {
-            Debug.Log("방패로 막음!");
             return;
         }
 
-        // 자기 검과 충돌 무시
-        Sword otherSword = other.GetComponent<Sword>();
-        if (otherSword != null && otherSword.owner == this.owner)
+        // 상대방이 MLtest인지 확인
+        if (other.TryGetComponent<MLtest>(out var opponent1))
         {
-            Debug.Log("자기 검과 충돌 무시");
-            return;
-        }
+            opponent1.TakeDamage(damageAmount); // 상대에게 데미지
 
-        // 자기 자신의 몸체와 충돌 무시
-        if (other.transform.root.gameObject == owner)
+            // 공격자인 나에게 성공 보상 (내가 MLtest2일 수도 있으므로)
+            owner.GetComponent<MLtest2>()?.OnSuccessfulAttack(damageAmount);
+
+            // 한 번만 때리도록 콜라이더 비활성화
+            GetComponent<Collider>().enabled = false;
+        }
+        // 상대방이 MLtest2인지 확인
+        else if (other.TryGetComponent<MLtest2>(out var opponent2))
         {
-            Debug.Log("자기 자신의 몸체와 충돌 무시");
-            return;
+            opponent2.TakeDamage(damageAmount); // 상대에게 데미지
+
+            // 공격자인 나에게 성공 보상 (내가 MLtest일 수도 있으므로)
+            owner.GetComponent<MLtest>()?.OnSuccessfulAttack(damageAmount);
+
+            // 한 번만 때리도록 콜라이더 비활성화
+            GetComponent<Collider>().enabled = false;
         }
-
-        //  [중요!] 공격자가 공격 중인지 체크
-        RootMotionMover myRootMotion = owner.GetComponent<RootMotionMover>();
-        if (myRootMotion != null && !myRootMotion.isAttacking)
-        {
-            Debug.Log($"{owner.name}가 공격 중이 아님! 데미지 무시");
-            return;
-        }
-
-        // 상대방의 방어 여부만 확인
-        RootMotionMover rootMotion = other.GetComponentInParent<RootMotionMover>();
-        if (rootMotion != null)
-        {
-            bool isDefending = rootMotion.animator.GetBool("isDefending");
-            Debug.Log($"{other.name}의 방어 상태: {isDefending}");
-
-            if (isDefending)
-            {
-                Debug.Log($"{other.name}가 방어 중! 데미지 무시.");
-                return;
-            }
-        }
-
-        // 데미지 주기
-        IDamageable target = other.GetComponent<IDamageable>();
-        if (target != null)
-        {
-            Debug.Log($"{owner.name}의 검이 {other.name}에게 데미지!");
-            target.TakeDamage(damage);
-
-            //추가
-            // Sword의 owner에 연결된 Agent에게 보상 지급
-            MLtest2 attackerAgent = owner.GetComponent<MLtest2>();
-            if (attackerAgent != null)
-            {
-                attackerAgent.OnSuccessfulAttack(damage);
-               // attackerAgent.OnFailedAttack(damage);
-            }
-        }
-    }
-
-
-
-    private void Update()
-    {
-        Vector3 currentVelocity = (transform.position - lastPosition) / Time.deltaTime;
-        acceleration = (currentVelocity - velocity) / Time.deltaTime;
-        velocity = currentVelocity;
-        lastPosition = transform.position;
     }
 }
