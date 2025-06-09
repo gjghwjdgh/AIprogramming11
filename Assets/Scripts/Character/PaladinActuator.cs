@@ -62,7 +62,10 @@ public class PaladinActuator : MonoBehaviour
     
     public void Dodge(string direction)
     {
-        animator.SetTrigger("Dodge_" + direction);
+        if (direction == "Backward" || direction == "Left" || direction == "Right")
+        {
+            animator.SetTrigger("Dodge_Backward");
+        }
     }
 
     public void FeintStep(string direction)

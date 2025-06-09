@@ -61,11 +61,10 @@ public class BT_Defensive_Paladin : BT_Brain
             new Selector(new List<Node>
             {
                 new Sequence(new List<Node> { new IsHealthLowNode(transform, 0f), new ActionLoggerNode(this, "사망", new DieNode(transform)) }),
-// 적의 치명타 공격이 감지되고, 회피 쿨타임이 아닐 때 -> 뒤로 회피
+                // 적의 치명타 공격이 감지되고, 회피 쿨타임이 아닐 때 -> 뒤로 회피      
                 new Sequence(new List<Node>
                 {
                     new IsEnemyCritAttackDetectedNode(targetAnimator, criticalAttackStateName),
-                    new IsCooldownCompleteNode(transform, "Evade"),
                     new ActionLoggerNode(this, "치명타 회피", new EvadeNode(transform, "Backward")) // EvadeNode 사용
                 })
             }),
@@ -76,7 +75,7 @@ public class BT_Defensive_Paladin : BT_Brain
                 new IsEnemyAttackImminentNode(targetAnimator, normalAttackStateName),
                 new IsHealthHighEnoughToDefendNode(transform, lowHealthThreshold), // 방어에 충분한 체력인지 확인
                 new IsCooldownCompleteNode(transform, "Defend"),
-                new ActionLoggerNode(this, "2초 방어", new TimedDefendNode(transform, 2.0f))
+                new ActionLoggerNode(this, "2초 방어", new TimedDefendNode(transform, 1.0f))
             }),
 
             // --- 행동 잠금 확인: AI가 공격/회피 등 다른 행동 중일 때는 아래 로직을 실행하지 않음 ---
