@@ -440,8 +440,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c7306bca857c5048b2167c1acc1bf83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
   owner: {fileID: 1847199884}
+  damageAmount: 20
 --- !u!65 &106905413
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2093,8 +2093,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c7306bca857c5048b2167c1acc1bf83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
   owner: {fileID: 1508895961}
+  damageAmount: 20
 --- !u!65 &674388383
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4163,7 +4163,6 @@ GameObject:
   - component: {fileID: 1186616630}
   - component: {fileID: 1186616629}
   - component: {fileID: 1186616632}
-  - component: {fileID: 1186616633}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4289,18 +4288,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &1186616633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1186616628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0acb10eb226f58749b756fb2e959bf29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1219476708
 GameObject:
   m_ObjectHideFlags: 0
@@ -4959,7 +4946,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 8
+    VectorObservationSize: 11
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 2
@@ -4968,7 +4955,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 9892b7f97a5203e4184c5a0a8e44b665, type: 3}
+  m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: DefenderAgent
@@ -6185,7 +6172,7 @@ MonoBehaviour:
   sword: {fileID: 106905409}
   rootMotionMover: {fileID: 1847199885}
   Target: {fileID: 1508895962}
-  isLeftAgent: 0
+  isLeftAgent: 1
   agentHealth: 100
   targetHealth: 100
 --- !u!114 &1847199891
@@ -6201,7 +6188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 8
+    VectorObservationSize: 11
     NumStackedVectorObservations: 8
     m_ActionSpec:
       m_NumContinuousActions: 2
@@ -6210,7 +6197,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 3697745a62606ee43a031d3e0c0224bb, type: 3}
+  m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: AgentBehavior
